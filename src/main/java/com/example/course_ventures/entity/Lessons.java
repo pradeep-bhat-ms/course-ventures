@@ -4,32 +4,30 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @NoArgsConstructor
-public class MockTest {
+@Entity
+public class Lessons {
 
-	
-	   @Id
+	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private int id;
-
-	    @NotBlank(message = "Testname should not be empty")
-	    private String testname;
-
-	    
-	    @NotBlank(message=" test duration should not be empty")
-	    @Min(value = 1, message = "TestDuration should be at least 1 minute")
-	    private String Testduration;
-	 
-	    private int result;
-
 	   
+	    @NotBlank(message = "Lesson title should not be empty")
+	    private String lessonName;
+	   
+	    @NotBlank(message = "Lesson description should not be empty")
+	    private String lessonDescription;
+	   
+	    private String ontenttype;
 	    
-	    private Course CourseName;
+	    private String contenturl;
+	    
+	    private String Lessonduration;
+	   
+	    private Module module;
 }

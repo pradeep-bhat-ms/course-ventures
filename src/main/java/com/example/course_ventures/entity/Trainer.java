@@ -18,3 +18,4 @@ public class Trainer extends User {
 	private int experience;
 	
 }
+

@@ -22,5 +22,3 @@ public class Category {
 
 }
 
-
-// review mock test and certificate 
