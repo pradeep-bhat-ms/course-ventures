@@ -1,7 +1,6 @@
 package com.example.course_ventures.entity;
 
 import com.example.course_ventures.enums.Role;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // joining two table like user and trainer and student // multiple table executes simultanesouly
 	private int id;
 	
 	@NotBlank(message="name should not be empty")
@@ -40,13 +39,12 @@ public class User {
 	private String email;
 	
 	@NotBlank(message = "Password is required")
-	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,20}$",
-	    message = "Password must be 8-20 characters long and include uppercase, lowercase, digit, and special character."
-	)
+	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,20}$",message = "Password must be 8-20 characters long and include uppercase, lowercase, digit, and special character.")
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	private String otp;
 	private boolean verified=false;
+
 }

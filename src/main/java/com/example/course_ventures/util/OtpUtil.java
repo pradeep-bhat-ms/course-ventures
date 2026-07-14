@@ -2,6 +2,8 @@ package com.example.course_ventures.util;
 
 import java.util.Random;
 
+import org.springframework.stereotype.Component;
+@Component
 public class OtpUtil {
 	public String getOtp()
 	{
