@@ -33,5 +33,9 @@ public class Course  {
 	private double price;
 	
 	private LocalDateTime createdAt=LocalDateTime.now();
+
+	private Category category;
+	private Trainer trainer;
+	
 	
 }

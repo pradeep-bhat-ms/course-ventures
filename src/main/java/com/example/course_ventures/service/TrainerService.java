@@ -50,5 +50,14 @@ package com.example.course_ventures.service;
 
 	        return repo.save(dbTrainer);
 	    }
+	    // Delete Trainer
+	    public String deleteTrainer(int id) {
+
+	        Trainer trainer = findTrainerById(id);
+
+	        repo.delete(trainer);
+
+	        return "Trainer Deleted Successfully";
+	    }
 	
 }

@@ -53,6 +53,15 @@ package com.example.course_ventures.service;
 
 	        return repo.save(dbStudent);
 	    }
+	    // Delete Student
+	    public String deleteStudent(int id) {
+
+	        Student student = findStudentById(id);
+
+	        repo.delete(student);
+
+	        return "Student Deleted Successfully";
+	    }
 
 	}
 	

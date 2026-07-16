@@ -20,7 +20,7 @@ public class Review {
     @Max(value = 5, message = "Rating should not be greater than 5")
     private int rating;
 
-//    @NotBlank(message = "Commment should not be empty")
+//  @NotBlank(message = "Commment should not be empty")
     private String comment;
 
     private Course course;
