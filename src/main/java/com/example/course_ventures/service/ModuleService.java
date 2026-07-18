@@ -2,6 +2,8 @@ package com.example.course_ventures.service;
 
 import java.util.List;
 import com.example.course_ventures.entity.Module;
+import com.example.course_ventures.exception.ModuleNotFound;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +32,22 @@ public class ModuleService {
     
     // Get Module By Id
     public Module findModuleById(int id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("Module Not Found"));
+        return repo.findById(id).orElseThrow(() -> new ModuleNotFound());
     }
     
     // Get All Modules
     public List<Module> findAllModules() {
         return repo.findAll();
+    }
+    
+    // update
+    public Module update(Module module) {
+        return repo.save(module);
+    }
+    //  delete 
+    public String deleteModule(int id) {
+        repo.delete(findModuleById(id));
+        return "Module Deleted Successfully";
     }
     
     

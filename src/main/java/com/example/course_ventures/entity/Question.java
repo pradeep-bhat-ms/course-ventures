@@ -1,7 +1,4 @@
 package com.example.course_ventures.entity;
-
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,4 +35,7 @@ public class Question {
 	@NotBlank(message="Answer should not be empty")
 	@Pattern(regexp = "^[ABCD]$ ", message="Answer must be one of the options : A,B,C,D")
 	private String answer;
+
+
+   private MockTest mockTest;
 }
