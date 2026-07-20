@@ -24,5 +24,6 @@ public class Review {
     private String comment;
 
     private Course course;
+    private Student student;
 
 }

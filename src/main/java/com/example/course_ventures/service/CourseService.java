@@ -20,11 +20,11 @@ public class CourseService {
 	CategoryService categoryService;
 	
 	@Autowired
-	TrainerService service;
+	TrainerService  trainerService;
 	
 	public Course save(Course c,int trainerid,int categoryId) {
 		com.example.course_ventures.entity.Category category=categoryService.findCategoryById(categoryId);
-		Trainer trainer=service.findTrainerById(trainerid);
+		Trainer trainer=trainerService.findTrainerById(trainerid);
 		
 		c.setCategory(category);
 		c.setTrainer(trainer);
@@ -51,14 +51,24 @@ public class CourseService {
 	    return "Course Deleted Successfully";
 	}
 	
-	// partial update
-	
-	public Course update(Course c, int id,String name, double price, String duration)
-	{
-		Course course=findCourseById(id);
-		course.setTitle(name);
-		course.setPrice(price);
-		course.setDuration(duration);
-		return courseRepo.save(course);
+	// Update Course
+	public Course updateCourse(int id, Course courseDetails, int categoryId, int trainerId) {
+
+	    Course course = findCourseById(id);
+
+	    if (categoryId > 0) {
+	        course.setCategory(categoryService.findCategoryById(categoryId));
+	    }
+
+	    if (trainerId > 0) {
+	        course.setTrainer(trainerService.findTrainerById(trainerId));
+	    }
+
+	    course.setTitle(courseDetails.getTitle());
+	    course.setDescription(courseDetails.getDescription());
+	    course.setPrice(courseDetails.getPrice());
+	    course.setDuration(courseDetails.getDuration());
+
+	    return courseRepo.save(course);
 	}
 }

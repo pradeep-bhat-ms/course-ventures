@@ -38,4 +38,10 @@ public class Question {
 
 
    private MockTest mockTest;
+
+
+   public String getCorrectOption() {
+	// TODO Auto-generated method stub
+	return null;
+   }
 }

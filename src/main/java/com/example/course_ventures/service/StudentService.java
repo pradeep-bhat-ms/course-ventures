@@ -8,7 +8,8 @@ package com.example.course_ventures.service;
 
 	import com.example.course_ventures.entity.Student;
 	import com.example.course_ventures.enums.Role;
-	import com.example.course_ventures.repository.StudentRepository;
+import com.example.course_ventures.exception.StudentNotFound;
+import com.example.course_ventures.repository.StudentRepository;
 
 	@Service
 	public class StudentService {
@@ -27,10 +28,12 @@ package com.example.course_ventures.service;
 	    }
 
 	    // Get Student By Id
-	    public Student findStudentById(int id) 
-	    {
-	        return repo.findById(id).orElseThrow(() -> new UsernameNotFoundException("Student Not Found"));
-	    }
+	  
+	    	public Student findStudentById(int id)
+	    	{
+	    	    return repo.findById(id)
+	    	            .orElseThrow(() -> new StudentNotFound());
+	    	}	    
 
 	    // Get All Students
 	    public List<Student> findAllStudent() {

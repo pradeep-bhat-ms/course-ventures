@@ -16,8 +16,8 @@ public class EmailSender {
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
 		mailMessage.setFrom("pradeephsg@gmail.com");
 		mailMessage.setTo(toEmail);
-		mailMessage.setSubject("Course_ventures otp sent succesfully");
-		mailMessage.setText(otp);
+		mailMessage.setSubject("CourseHub Email Verification OTP");
+		mailMessage.setText("Your CourseHub email verification OTP is: " + otp + "\n\nThis code is required before you can log in.");
 		javaMailSender.send(mailMessage);	
 	}
 }

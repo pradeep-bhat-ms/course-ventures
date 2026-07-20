@@ -62,20 +62,30 @@ public class UserService {
     	User u=repo.findById(id).orElseThrow(()-> new UsernameNotFoundException("inavlid ")) ;
     	String otp=util.getOtp();
 		u.setOtp(otp);
-		User save=repo.save(u);
+		repo.save(u);
 		sender.sendMail(u.getEmail(),otp );
 		return "Otp resend Succesfully";
     }
     
   //Request Forgot Password  
-    public String requestforForgetPassword(int id) {
-        User u = repo.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public String requestForgetPassword(String email) {
+
+        User u = repo.findByemail(email);
+
+        if (u == null) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+
         String otp = util.getOtp();
+
         u.setOtp(otp);
+
         repo.save(u);
+
         sender.sendMail(u.getEmail(), otp);
+
         return "Password reset OTP sent successfully";
-     }
+    }
     
     //Reset Password
     public String resetPassword(String email, String otp, String newPassword) {
@@ -94,9 +104,8 @@ public class UserService {
     }
     
     //  for find all records
-    public List<User> FindAllRecord()
-    {
-    	return repo.findAll();
+    public List<User> findAllUsers() {
+        return repo.findAll();
     }
  
 }

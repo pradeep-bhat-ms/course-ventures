@@ -23,11 +23,9 @@ public class Lessons {
 	    @NotBlank(message = "Lesson description should not be empty")
 	    private String lessonDescription;
 	   
-	    private String ontenttype;
-	    
-	    private String contenturl;
-	    
-	    private String Lessonduration;
+	    private String contentType;
+	    private String contentUrl;
+	    private String lessonDuration;
 	   
 	    private Module module;
 }

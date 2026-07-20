@@ -24,8 +24,8 @@ public class MocktestAttempt {
 	
 	private int score;
 	
-	private String totalQuestions;
+	private int totalQuestions;
 	
-	private LocalDateTime attemptDate=LocalDateTime.now();
+	private LocalDateTime attemptTime=LocalDateTime.now();
 
 }

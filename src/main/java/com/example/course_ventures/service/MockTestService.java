@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.course_ventures.entity.Course;
 import com.example.course_ventures.entity.MockTest;
+import com.example.course_ventures.entity.Question;
+import com.example.course_ventures.exception.MockTestNotFound;
 import com.example.course_ventures.repository.MockTestRepository;
+import com.example.course_ventures.repository.QuestionRepository;
 
 @Service
 public class MockTestService {
@@ -15,34 +18,63 @@ public class MockTestService {
 
 	    @Autowired
 	    private CourseService courseService;
+	    
+	    @Autowired
+	    private QuestionRepository questionRepository;
 
-	    // save
 	    public MockTest saveMockTest(MockTest test, int courseId) {
+
 	        Course course = courseService.findCourseById(courseId);
-	        test.setCourseName(course);
+	        test.setCourse(course);
+
+	        if (test.getQuestions() != null) {
+	            for (Question q : test.getQuestions()) {
+	                q.setMockTest(test);
+	            }
+	        }
+
 	        return repo.save(test);
 	    }
+	    
+	    
 	    // find by id
 	    public MockTest findMockTestById(int id)
 	    {
-	        return repo.findById(id).orElseThrow(() -> new RuntimeException("Mock Test Not Found"));
-	    }
+	    	return repo.findById(id)
+	    	        .orElseThrow(() -> new MockTestNotFound());	    }
 
 	    // find all
-	    public List<MockTest> findAllMockTest() {
-	        return repo.findAll();
+	    public List<MockTest> getMockTestsByCourseId(int courseId) {
+
+	        courseService.findCourseById(courseId);
+
+	        return repo.findByCourseId(courseId);
 	    }
 	    
-	    // update
-	    public MockTest update(MockTest M1)
-	    {
-	    	return repo.save(M1);
+	    public MockTest updateMockTest(int id, MockTest testDetails) {
+
+	        MockTest test = findMockTestById(id);
+
+	        test.setTestname(testDetails.getTestname());
+	        test.setTestduration(testDetails.getTestduration());
+	        test.setResult(testDetails.getResult());
+
+	        return repo.save(test);
 	    }
 	    
-	    // delete
-	    public String deleteMockTest(int id)
-	    {
-	        repo.delete(findMockTestById(id));
-	        return "Mock Test Deleted Successfully";
+	    public Question addQuestionToMockTest(int mockTestId, Question question) {
+
+	        MockTest mockTest = findMockTestById(mockTestId);
+
+	        question.setMockTest(mockTest);
+
+	        return questionRepository.save(question);
+	    }
+	    
+	    public void deleteMockTest(int id) {
+
+	        MockTest mockTest = findMockTestById(id);
+
+	        repo.delete(mockTest);
 	    }
 }

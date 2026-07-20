@@ -1,5 +1,8 @@
 package com.example.course_ventures.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +23,7 @@ public class Module {
 	    private Course course; // relation ship
 	    
 	    @NotBlank(message = "Module name should not be empty")
-	    private String moduleName;
+	    private String moduleTitle;
 	    
 	    @NotBlank(message = "Module description should not be empty")
 	    private String moduleDescription;
@@ -29,4 +32,8 @@ public class Module {
 	    private String moduleDuration;
 	    
 	    private  int numberOfLessons;
+	    
+	    private int orderIndex;
+	    
+	    private List<Lessons> lessons = new ArrayList();
 }

@@ -37,7 +37,7 @@ public class CategoryService {
     {
         Category dbCategory = findCategoryById(id);
         dbCategory.setCategoryName(category.getCategoryName());
-        dbCategory.setCategoryDescription(category.getCategoryName());
+        dbCategory.setCategoryDescription(category.getCategoryDescription());
         return repo.save(dbCategory);
     }
     

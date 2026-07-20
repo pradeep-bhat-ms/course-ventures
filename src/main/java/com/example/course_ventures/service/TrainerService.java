@@ -8,7 +8,8 @@ package com.example.course_ventures.service;
 
 	import com.example.course_ventures.entity.Trainer;
 	import com.example.course_ventures.enums.Role;
-	import com.example.course_ventures.repository.TrainerRepository;
+import com.example.course_ventures.exception.TrainerNotFound;
+import com.example.course_ventures.repository.TrainerRepository;
 
 	@Service
 	public class TrainerService {
@@ -22,15 +23,18 @@ package com.example.course_ventures.service;
 	    
 	    // Register Trainer
 	    public Trainer saveTrainerInfo(Trainer trainer) {
-			
-	    	trainer.setRole(Role.TRAINER);
-			return repo.save(trainer);
-		}
+
+	        trainer.setRole(Role.TRAINER);
+
+	        return (Trainer) userService.saveUser(trainer);
+	    }
 
 	    // Get Trainer By Id
-	    public Trainer findTrainerById(int id) {
-	        return repo.findById(id).orElseThrow(() -> new UsernameNotFoundException("Trainer Not Found"));
-	    }
+	    	public Trainer findTrainerById(int id) {
+
+	    	    return repo.findById(id)
+	    	            .orElseThrow(() -> new TrainerNotFound());
+	    	}	    
 
 	    // Get All Trainers
 	    public List<Trainer> findAllTrainer() {

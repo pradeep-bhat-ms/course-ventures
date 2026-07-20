@@ -36,12 +36,24 @@ public class ModuleService {
     }
     
     // Get All Modules
-    public List<Module> findAllModules() {
-        return repo.findAll();
+    public List<Module> getModulesByCourseId(int courseId) {
+
+        courseService.findCourseById(courseId);
+
+        return repo.findByCourseIdOrderByOrderIndexAsc(courseId);
     }
     
     // update
-    public Module update(Module module) {
+    public Module updateModule(int id, Module moduleDetails) {
+
+        Module module = findModuleById(id);
+
+        module.setModuleTitle(moduleDetails.getModuleTitle());
+        module.setModuleDescription(moduleDetails.getModuleDescription());
+        module.setModuleDuration(moduleDetails.getModuleDuration());
+        module.setNumberOfLessons(moduleDetails.getNumberOfLessons());
+        module.setOrderIndex(moduleDetails.getOrderIndex());
+
         return repo.save(module);
     }
     //  delete 

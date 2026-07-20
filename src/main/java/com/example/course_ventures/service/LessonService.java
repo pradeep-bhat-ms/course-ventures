@@ -36,10 +36,17 @@ public class LessonService {
         return repo.findAll();
     }
     
-    // update
-    public Lessons update(Lessons l1)
-    {
-    	return repo.save(l1);
+    public Lessons updateLesson(int id, Lessons lessonDetails) {
+
+        Lessons lesson = findLessonById(id);
+
+        lesson.setLessonName(lessonDetails.getLessonName());
+        lesson.setLessonDescription(lessonDetails.getLessonDescription());
+        lesson.setContentType(lessonDetails.getContentType());
+        lesson.setContentUrl(lessonDetails.getContentUrl());
+        lesson.setLessonDuration(lessonDetails.getLessonDuration());
+
+        return repo.save(lesson);
     }
 
     // Delete Lesson
