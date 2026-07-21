@@ -3,7 +3,6 @@ package com.example.course_ventures.service;
 	import java.util.List;
 
 	import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.security.core.userdetails.UsernameNotFoundException;
 	import org.springframework.stereotype.Service;
 
 	import com.example.course_ventures.entity.Student;
@@ -46,13 +45,8 @@ import com.example.course_ventures.repository.StudentRepository;
 	        Student dbStudent = findStudentById(id);
 
 	        dbStudent.setName(student.getName());
-	        dbStudent.setMobile(student.getMobile());
 	        dbStudent.setEmail(student.getEmail());
 	        dbStudent.setCollegename(student.getCollegename());
-	        dbStudent.setDegree(student.getDegree());
-	        dbStudent.setStream(student.getStream());
-	        dbStudent.setYop(student.getYop());
-	        dbStudent.setCgpa(student.getCgpa());
 
 	        return repo.save(dbStudent);
 	    }

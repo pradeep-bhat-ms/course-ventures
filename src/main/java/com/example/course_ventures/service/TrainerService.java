@@ -1,13 +1,9 @@
 package com.example.course_ventures.service;
 
-	import java.util.List;
-
-	import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.security.core.userdetails.UsernameNotFoundException;
-	import org.springframework.stereotype.Service;
-
-	import com.example.course_ventures.entity.Trainer;
-	import com.example.course_ventures.enums.Role;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;	import org.springframework.stereotype.Service;
+import com.example.course_ventures.entity.Trainer;
+import com.example.course_ventures.enums.Role;
 import com.example.course_ventures.exception.TrainerNotFound;
 import com.example.course_ventures.repository.TrainerRepository;
 
@@ -47,7 +43,6 @@ import com.example.course_ventures.repository.TrainerRepository;
 	        Trainer dbTrainer = findTrainerById(id);
 
 	        dbTrainer.setName(trainer.getName());
-	        dbTrainer.setMobile(trainer.getMobile());
 	        dbTrainer.setEmail(trainer.getEmail());
 	        dbTrainer.setSpecilization(trainer.getSpecilization());
 	        dbTrainer.setExperience(trainer.getExperience());

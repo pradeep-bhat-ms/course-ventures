@@ -1,10 +1,12 @@
 package com.example.course_ventures.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,15 +19,18 @@ public class Lessons {
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private int id;
 	   
-	    @NotBlank(message = "Lesson title should not be empty")
-	    private String lessonName;
+	    private String title;
 	   
-	    @NotBlank(message = "Lesson description should not be empty")
-	    private String lessonDescription;
 	   
-	    private String contentType;
-	    private String contentUrl;
-	    private String lessonDuration;
-	   
-	    private Module module;
+	    private String contentType;// VIDEO, TEXT, PDF, QUIZ, etc.
+	    private String contentUrl;// URL to video, PDF, etc.
+	    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.LONGVARCHAR)
+		@jakarta.persistence.Column(columnDefinition = "TEXT")
+	    private String textContent; // For text-based lessons
+		private int orderIndex; // To maintain the order of lessons in a module
+		private int durationMinutes; // Estimated duration for video lessons
+
+		@ManyToOne
+		@JsonIgnore
+		private Module module;
 }

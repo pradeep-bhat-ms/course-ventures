@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,18 +20,17 @@ public class Certificate {
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private int id;
 	    
+		@ManyToOne
 	    private Student student;
-	    
+		
+		@ManyToOne
 	    private Course course;
 	    
-	    @NotBlank(message = "certificateDescription name should not be empty")
-	    private String certificateDescription;
-
+		
 	    @NotBlank(message = "Certificate number should not be empty")
 	    private String certificateNumber;
 
-	    @NotBlank(message="CertificateNmae should not be empty")
-	    private String certificateName;
+	    private String certificateUrl;
 	 
 	    
 	    private LocalDateTime issueDate=LocalDateTime.now();

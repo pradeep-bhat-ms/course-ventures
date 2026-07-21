@@ -36,18 +36,16 @@ public class LessonService {
         return repo.findAll();
     }
     
-    public Lessons updateLesson(int id, Lessons lessonDetails) {
-
-        Lessons lesson = findLessonById(id);
-
-        lesson.setLessonName(lessonDetails.getLessonName());
-        lesson.setLessonDescription(lessonDetails.getLessonDescription());
-        lesson.setContentType(lessonDetails.getContentType());
-        lesson.setContentUrl(lessonDetails.getContentUrl());
-        lesson.setLessonDuration(lessonDetails.getLessonDuration());
-
-        return repo.save(lesson);
-    }
+	public Lessons updateLesson(int id, Lessons lessonDetails) {
+		Lessons lesson = findLessonById(id);
+		lesson.setTitle(lessonDetails.getTitle());
+		lesson.setContentType(lessonDetails.getContentType());
+		lesson.setContentUrl(lessonDetails.getContentUrl());
+		lesson.setTextContent(lessonDetails.getTextContent());
+		lesson.setOrderIndex(lessonDetails.getOrderIndex());
+		lesson.setDurationMinutes(lessonDetails.getDurationMinutes());
+		return repo.save(lesson);
+	}
 
     // Delete Lesson
     public String deleteLesson(int id) {

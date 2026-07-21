@@ -1,6 +1,7 @@
 package com.example.course_ventures.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,5 +71,10 @@ public class CourseService {
 	    course.setDuration(courseDetails.getDuration());
 
 	    return courseRepo.save(course);
+	}
+
+	public Map<String, Object> getAllCourses() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -50,8 +50,6 @@ public class ModuleService {
 
         module.setModuleTitle(moduleDetails.getModuleTitle());
         module.setModuleDescription(moduleDetails.getModuleDescription());
-        module.setModuleDuration(moduleDetails.getModuleDuration());
-        module.setNumberOfLessons(moduleDetails.getNumberOfLessons());
         module.setOrderIndex(moduleDetails.getOrderIndex());
 
         return repo.save(module);

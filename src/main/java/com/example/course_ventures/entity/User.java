@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name="user-info")
+@Table(name="users")
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED) //  this class is super class  and inherited 
 public class User {
@@ -32,9 +32,6 @@ public class User {
 	@Size(min=3, max=20 , message="name should  be beteween 3 to 20")
 	private String name;
 	
-	@Pattern(regexp = "^[0-9]{10}$",message = "Mobile number should be exactly 10 digits.")
-	private String mobile;
-
 	@Email(message="email should be in valid format")
 	private String email;
 	
@@ -46,5 +43,10 @@ public class User {
 	private Role role;
 	private String otp;
 	private boolean verified=false;
+	
+	private boolean approved=false;
+	public void setEmail(String email) {
+		this.email = email != null ? email.trim().toLowerCase() : null;
+	}
 
 }

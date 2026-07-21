@@ -4,7 +4,7 @@ package com.example.course_ventures.dto;
 
 	@Data
 	@NoArgsConstructor
-	public class StudentResponse {
+	public class StudentResponseDto {
 
 		private int id;
 		private String name;

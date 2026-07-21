@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
-public class StudentRequest {
+public class StudentRequestDto {
 
 	@NotBlank(message="College name Should not be empty")
 	private String collegename;
