@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ResponseStructure<T> {
+public class ResponseStructure<T> //ResponseStructure userdefined class  response entiy inbuilt class
+{
 
 	private int status;
 	private String message;
