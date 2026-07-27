@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.dto.CertificateRequestDto;
-import com.jsp.CourseHub.dto.CertificateResponseDto;
-import com.jsp.CourseHub.entity.Certificate;
-import com.jsp.CourseHub.repository.CertificateRepository;
-import com.jsp.CourseHub.service.CertificateService;
+import com.example.course_ventures.dto.CertificateRequestDto;
+import com.example.course_ventures.dto.CertificateResponseDto;
+import com.example.course_ventures.entity.Certificate;
+import com.example.course_ventures.repository.CertificateRepository;
+import com.example.course_ventures.service.CertificateService;
+
 
 @RestController
 @RequestMapping("/certificate")
@@ -42,7 +43,7 @@ public class CertificateController {
 	}
 
 	@GetMapping("/student")
-	public List<Certificate> getStudentCertificates(@RequestParam int studentId) {
+	public List<java.security.cert.Certificate> getStudentCertificates(@RequestParam int studentId) {
 		return certificateRepository.findByStudentId(studentId);
 	}
 

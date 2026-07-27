@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - CourseHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card glass-panel">
+            <a href="/" class="brand-logo" style="display: block; text-align: center; margin-bottom: 24px;">
+                <i class="bi bi-rocket-takeoff-fill me-1"></i> CourseHub
+            </a>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Join us to start learning or teaching courses</p>
+
+            <div class="form-tabs">
+                <div id="tab-student" class="form-tab active" onclick="switchTab('student')"><i class="bi bi-mortarboard-fill me-1"></i> Student</div>
+                <div id="tab-trainer" class="form-tab" onclick="switchTab('trainer')"><i class="bi bi-person-workspace me-1"></i> Trainer</div>
+                <div id="tab-admin" class="form-tab" onclick="switchTab('admin')"><i class="bi bi-shield-lock-fill me-1"></i> Admin</div>
+            </div>
+
+            <div id="alert-box" class="alert alert-error" style="display: none;"></div>
+
+            <!-- Student Form -->
+            <form id="form-student" onsubmit="submitForm(event, 'student')">
+                <div class="form-group">
+                    <label for="student-name" class="form-label">Full Name</label>
+                    <input type="text" id="student-name" name="name" class="form-control" placeholder="John Doe" required minlength="3" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="student-email" class="form-label">Email Address</label>
+                    <input type="email" id="student-email" name="email" class="form-control" placeholder="john@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-password" class="form-label">Password</label>
+                    <input type="password" id="student-password" name="password" class="form-control" placeholder="••••••••" required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=!]).{8,}$" title="Must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long">
+                </div>
+                <div class="form-group">
+                    <label for="student-college" class="form-label">College Name</label>
+                    <input type="text" id="student-college" name="collegeName" class="form-control" placeholder="State University">
+                </div>
+                <div class="form-group">
+                    <label for="student-qualification" class="form-label">Qualification</label>
+                    <input type="text" id="student-qualification" name="qualification" class="form-control" placeholder="B.Tech / MCA">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 14px;">Sign Up as Student</button>
+            </form>
+
+            <!-- Trainer Form -->
+            <form id="form-trainer" onsubmit="submitForm(event, 'trainer')" style="display: none;">
+                <div class="form-group">
+                    <label for="trainer-name" class="form-label">Full Name</label>
+                    <input type="text" id="trainer-name" name="name" class="form-control" placeholder="Dr. Sarah" required minlength="3" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="trainer-email" class="form-label">Email Address</label>
+                    <input type="email" id="trainer-email" name="email" class="form-control" placeholder="sarah@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="trainer-password" class="form-label">Password</label>
+                    <input type="password" id="trainer-password" name="password" class="form-control" placeholder="••••••••" required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=!]).{8,}$">
+                </div>
+                <div class="form-group">
+                    <label for="trainer-specialization" class="form-label">Specialization</label>
+                    <input type="text" id="trainer-specialization" name="specialization" class="form-control" placeholder="Java / Cloud Architecture" required>
+                </div>
+                <div class="form-group">
+                    <label for="trainer-experience" class="form-label">Experience (Years)</label>
+                    <input type="number" id="trainer-experience" name="experience" class="form-control" placeholder="5" required min="0">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 14px;">Sign Up as Trainer</button>
+            </form>
+
+            <!-- Admin Shortcut Form -->
+            <form id="form-admin" th:action="@{/login}" method="post" style="display: none;">
+                <div class="alert alert-success" style="margin-bottom: 18px;">
+                    <i class="bi bi-info-circle-fill me-1"></i> Admin account is already created. Use this tab to log in as admin.
+                </div>
+                <div class="form-group">
+                    <label for="admin-email" class="form-label">Admin Email</label>
+                    <input type="email" id="admin-email" name="username" class="form-control" value="admin@coursehub.com" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="admin-password" class="form-label">Admin Password</label>
+                    <input type="password" id="admin-password" name="password" class="form-control" value="Admin@123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 14px;">Log In as Admin</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 24px; color: var(--text-secondary); font-size: 14px;">
+                Already have an account? <a href="/login" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Log In</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(role) {
+            const studentTab = document.getElementById('tab-student');
+            const trainerTab = document.getElementById('tab-trainer');
+            const adminTab = document.getElementById('tab-admin');
+            const studentForm = document.getElementById('form-student');
+            const trainerForm = document.getElementById('form-trainer');
+            const adminForm = document.getElementById('form-admin');
+            
+            if (role === 'student') {
+                studentTab.classList.add('active');
+                trainerTab.classList.remove('active');
+                adminTab.classList.remove('active');
+                studentForm.style.display = 'block';
+                trainerForm.style.display = 'none';
+                adminForm.style.display = 'none';
+            } else if (role === 'trainer') {
+                trainerTab.classList.add('active');
+                studentTab.classList.remove('active');
+                adminTab.classList.remove('active');
+                trainerForm.style.display = 'block';
+                studentForm.style.display = 'none';
+                adminForm.style.display = 'none';
+            } else {
+                adminTab.classList.add('active');
+                studentTab.classList.remove('active');
+                trainerTab.classList.remove('active');
+                adminForm.style.display = 'block';
+                studentForm.style.display = 'none';
+                trainerForm.style.display = 'none';
+            }
+            document.getElementById('alert-box').style.display = 'none';
+        }
+
+        async function submitForm(event, role) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            if (data.experience) {
+                data.experience = parseInt(data.experience);
+            }
+            
+            const endpoint = role === 'student' ? '/student/save' : '/trainer/save';
+            const alertBox = document.getElementById('alert-box');
+            alertBox.style.display = 'none';
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const userId = result.data.id;
+                    window.location.href = `/verify-otp?userId=${userId}`;
+                } else {
+                    alertBox.textContent = result.message || 'Registration failed. Check password requirements.';
+                    alertBox.style.display = 'block';
+                }
+            } catch (err) {
+                alertBox.textContent = 'Network error occurred.';
+                alertBox.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

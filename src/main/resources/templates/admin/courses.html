@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout('Courses - Admin', ~{::section})}">
+<body>
+    <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div>
+                <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 6px;">All Courses</h1>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 15px;">Manage available courses and curriculum settings.</p>
+            </div>
+            <a href="/trainer/dashboard" class="btn btn-secondary">
+                <i class="bi bi-tags-fill me-1"></i> Manage Categories
+            </a>
+        </div>
+
+        <div class="glass-panel" style="overflow: hidden;">
+            <table class="glass-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title & Description</th>
+                        <th>Price</th>
+                        <th>Duration</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="course : ${courses}">
+                        <td style="color: var(--text-secondary); font-weight: 600;" th:text="'#' + ${course.id}">#1</td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 16px;" th:text="${course.title}">Java Programming</div>
+                            <div style="color: var(--text-secondary); font-size: 13px; max-width: 320px;" th:text="${course.discription}">Learn Java from scratch</div>
+                        </td>
+                        <td><span class="course-price" style="font-size: 18px;" th:text="'₹' + ${course.price}">₹9999</span></td>
+                        <td><span class="badge-custom badge-info"><i class="bi bi-clock-history"></i> <span th:text="${course.duration} + ' Days'">30 Days</span></span></td>
+                        <td style="color: var(--text-secondary);" th:text="${course.createdDate}">2026-01-01</td>
+                        <td>
+                            <button class="btn btn-danger" style="padding: 6px 14px; font-size: 13px;" th:onclick="'deleteCourse(' + ${course.id} + ')'">
+                                <i class="bi bi-trash-fill"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            async function deleteCourse(courseId) {
+                if (confirm('Are you sure you want to delete this course?')) {
+                    try {
+                        const response = await fetch(`/course/delete/${courseId}`, { method: 'DELETE' });
+                        if (response.ok) window.location.reload();
+                    } catch (err) { alert('Error deleting course'); }
+                }
+            }
+        </script>
+    </section>
+</body>
+</html>

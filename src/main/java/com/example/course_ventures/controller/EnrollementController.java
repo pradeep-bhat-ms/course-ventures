@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.Enrollement;
-import com.jsp.CourseHub.repository.EnrollementRepository;
-import com.jsp.CourseHub.service.EnrollementService;
+import com.example.course_ventures.entity.Enrollement;
+import com.example.course_ventures.repository.EnrollementRepository;
+import com.example.course_ventures.service.EnrollementService;
+
+
 
 
 @RestController

@@ -13,17 +13,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.jsp.CourseHub.entity.Course;
-import com.jsp.CourseHub.entity.Enrollement;
-import com.jsp.CourseHub.entity.MockTest;
-import com.jsp.CourseHub.entity.Student;
-import com.jsp.CourseHub.entity.Trainer;
-import com.jsp.CourseHub.entity.User;
-import com.jsp.CourseHub.repository.EnrollementRepository;
-import com.jsp.CourseHub.repository.UserRepository;
-import com.jsp.CourseHub.service.CategoryService;
-import com.jsp.CourseHub.service.CourseService;
-import com.jsp.CourseHub.service.MockTestService;
+import com.example.course_ventures.entity.Category;
+import com.example.course_ventures.entity.Course;
+import com.example.course_ventures.entity.Enrollement;
+import com.example.course_ventures.entity.MockTest;
+import com.example.course_ventures.entity.Student;
+import com.example.course_ventures.entity.Trainer;
+import com.example.course_ventures.entity.User;
+import com.example.course_ventures.repository.EnrollementRepository;
+import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.service.CategoryService;
+import com.example.course_ventures.service.CourseService;
+import com.example.course_ventures.service.MockTestService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -50,7 +51,7 @@ public class WebViewController {
 		if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
 			return null;
 		}
-		return userRepository.findByEmail(auth.getName());
+		return userRepository.findByemail(auth.getName());
 	}
 
 	@GetMapping("/login")
@@ -102,7 +103,7 @@ public class WebViewController {
 	@GetMapping({"/", "/home"})
 	public String homePage(Model model) {
 		User user = getCurrentUser();
-		List<Course> courses = courseService.getAllCourses();
+		List<Course> courses = (List<Course>) courseService.getAllCourses();
 
 		model.addAttribute("user", user);
 		model.addAttribute("courses", courses);
@@ -126,7 +127,7 @@ public class WebViewController {
 	@GetMapping("/courses/{id}")
 	public String courseDetailsPage(@PathVariable int id, Model model) {
 		User user = getCurrentUser();
-		Course course = courseService.getCourseById(id);
+		Course course = courseService.findCourseById(id);
 		List<MockTest> mockTests = mockTestService.getMockTestsByCourseId(id);
 
 		boolean isPurchased = false;
@@ -152,7 +153,7 @@ public class WebViewController {
 		if (user == null) {
 			return "redirect:/login";
 		}
-		MockTest mockTest = mockTestService.getMockTestById(id);
+		MockTest mockTest = mockTestService.findMockTestById(id);
 
 		// Double check enrollment
 		boolean isPurchased = false;
@@ -180,7 +181,7 @@ public class WebViewController {
 			return "redirect:/";
 		}
 
-		List<Course> courses = courseService.getAllCourses();
+		List<Course> courses = (List<Course>) courseService.getAllCourses();
 		if (user instanceof Trainer) {
 			Trainer trainer = (Trainer) user;
 			courses = courses.stream()
@@ -188,7 +189,7 @@ public class WebViewController {
 					.collect(Collectors.toList());
 		}
 
-		List<com.jsp.CourseHub.entity.Category> categories = categoryService.getAllCategories();
+		List<Category> categories = categoryService.getAllCategories();
 
 		model.addAttribute("user", user);
 		model.addAttribute("courses", courses);
@@ -209,4 +210,3 @@ public class WebViewController {
 }
 
 
-}

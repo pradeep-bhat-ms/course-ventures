@@ -6,14 +6,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jsp.CourseHub.entity.Lesson;
-import com.jsp.CourseHub.entity.Module;
-import com.jsp.CourseHub.entity.ModuleProgress;
-import com.jsp.CourseHub.entity.Student;
-import com.jsp.CourseHub.repository.LessonRepository;
-import com.jsp.CourseHub.repository.ModuleProgressRepository;
-import com.jsp.CourseHub.repository.ModuleRepository;
-import com.jsp.CourseHub.service.StudentService;
+import com.example.course_ventures.entity.Lessons;
+import com.example.course_ventures.entity.Module;
+import com.example.course_ventures.entity.ModuleProgress;
+import com.example.course_ventures.entity.Student;
+import com.example.course_ventures.repository.LessonRepository;
+import com.example.course_ventures.repository.ModuleProgressRepository;
+import com.example.course_ventures.repository.ModuleRepository;
+
+
 
 @Service
 public class ModuleProgressService {
@@ -36,11 +37,11 @@ public class ModuleProgressService {
 			return existing.get();
 		}
 
-		Student student = studentService.getStudentById(studentId);
-		Module module = moduleRepository.findById(moduleId)
+		Student student = studentService.findStudentById(studentId);
+		com.example.course_ventures.entity.Module module = moduleRepository.findById(moduleId)
 				.orElseThrow(() -> new RuntimeException("Module Not Found"));
 		
-		List<Lesson> lessons = lessonRepository.findByModuleId(moduleId);
+		Optional<Lessons> lessons = lessonRepository.findById(moduleId);
 		
 		ModuleProgress progress = new ModuleProgress();
 		progress.setStudent(student);
@@ -63,12 +64,12 @@ public class ModuleProgressService {
 		return moduleProgressRepository.save(progress);
 	}
 
-	public List<ModuleProgress> getStudentProgress(int studentId) {
-		return moduleProgressRepository.findByStudentId(studentId);
+	public Optional<Module> getStudentProgress(int studentId) {
+		return moduleProgressRepository.findById(studentId);
 	}
 
-	public List<ModuleProgress> getModuleProgress(int moduleId) {
-		return moduleProgressRepository.findByModuleId(moduleId);
+	public Optional<Module> getModuleProgress(int moduleId) {
+		return moduleProgressRepository.findById(moduleId);
 	}
 
 	public int calculateCourseProgress(int studentId, int courseId) {

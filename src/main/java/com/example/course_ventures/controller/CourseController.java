@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.Category;
-import com.jsp.CourseHub.entity.Course;
-import com.jsp.CourseHub.entity.User;
-import com.jsp.CourseHub.repository.UserRepository;
-import com.jsp.CourseHub.service.CategoryService;
-import com.jsp.CourseHub.service.CourseService;
+import com.example.course_ventures.entity.Category;
+import com.example.course_ventures.entity.Course;
+import com.example.course_ventures.entity.User;
+import com.example.course_ventures.enums.Role;
+import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.service.CategoryService;
+import com.example.course_ventures.service.CourseService;
 
 
 @RestController
@@ -40,8 +41,8 @@ public class CourseController {
 			@RequestParam int categoryId,
 			Authentication authentication) {
 
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || user.getRole() != Role.TRAINER) {
 			throw new IllegalStateException("Only trainers can create courses.");
 		}
 
@@ -57,7 +58,7 @@ public class CourseController {
 	@GetMapping("/fetch/{id}")
 	public Course getCourseById(@PathVariable int id) {
 
-		return courseService.getCourseById(id);
+		return courseService.findCourseById(id);
 	}
 
 	@PostMapping("/update/{id}")
@@ -67,23 +68,23 @@ public class CourseController {
 			@RequestParam int categoryId,
 			Authentication authentication) {
 
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || user.getRole() != Role.TRAINER) {
 			throw new IllegalStateException("Only trainers can update courses.");
 		}
 
-		Course course = courseService.getCourseById(id);
+		Course course = courseService.findCourseById(id);
 		if (course.getTrainer() == null || course.getTrainer().getId() != user.getId()) {
 			throw new IllegalStateException("You are not authorized to update this course.");
 		}
 
 		course.setTitle(courseDetails.getTitle());
-		course.setDiscription(courseDetails.getDiscription());
+		course.setDescription(courseDetails.getDescription());
 		course.setPrice(courseDetails.getPrice());
 		course.setDuration(courseDetails.getDuration());
 
 		// Save/Update Category
-		Category category = categoryService.getCategoryById(categoryId);
+		Category category = categoryService.findCategoryById(categoryId);
 		course.setCategory(category);
 
 		return courseService.saveCourse(course, categoryId, user.getId());
@@ -94,12 +95,12 @@ public class CourseController {
 			@PathVariable int id,
 			Authentication authentication) {
 
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || user.getRole() != Role.TRAINER) {
 			throw new IllegalStateException("Only trainers can delete courses.");
 		}
 
-		Course course = courseService.getCourseById(id);
+		Course course = courseService.findCourseById(id);
 		if (course.getTrainer() == null || course.getTrainer().getId() != user.getId()) {
 			throw new IllegalStateException("You are not authorized to delete this course.");
 		}

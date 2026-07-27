@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jsp.CourseHub.entity.Course;
-import com.jsp.CourseHub.entity.Enrollement;
-import com.jsp.CourseHub.entity.Student;
-import com.jsp.CourseHub.entity.Trainer;
-import com.jsp.CourseHub.service.AdminDashboardService;
-
+import com.example.course_ventures.entity.Course;
+import com.example.course_ventures.entity.Enrollement;
+import com.example.course_ventures.entity.Student;
+import com.example.course_ventures.entity.Trainer;
+import com.example.course_ventures.service.AdminDashboardService;
 
 @Controller
 @RequestMapping("/admin")

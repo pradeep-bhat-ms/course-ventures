@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout('Enrollments - Admin', ~{::section})}">
+<body>
+    <section>
+        <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 6px;">All Enrollments</h1>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 15px;">Monitor active course enrollments and completions.</p>
+        </div>
+
+        <div class="glass-panel" style="overflow: hidden;">
+            <table class="glass-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Enrolled Course</th>
+                        <th>Enrollment Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="enrollment : ${enrollments}">
+                        <td style="color: var(--text-secondary); font-weight: 600;" th:text="'#' + ${enrollment.id}">#1</td>
+                        <td style="font-weight: 700;" th:text="${enrollment.student.name}">John Doe</td>
+                        <td style="font-weight: 600; color: var(--primary-color);" th:text="${enrollment.course.title}">Java Programming</td>
+                        <td style="color: var(--text-secondary);" th:text="${enrollment.enrollmentDate}">2026-01-01</td>
+                        <td>
+                            <span th:if="${enrollment.status == 'ENROLLED'}" class="badge-custom badge-success"><i class="bi bi-play-circle-fill"></i> Enrolled</span>
+                            <span th:if="${enrollment.status == 'COMPLETED'}" class="badge-custom badge-info"><i class="bi bi-check-circle-fill"></i> Completed</span>
+                            <span th:if="${enrollment.status == 'CANCELLED'}" class="badge-custom badge-danger"><i class="bi bi-x-circle-fill"></i> Cancelled</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
+</html>

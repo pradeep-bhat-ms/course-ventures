@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.User;
-import com.jsp.CourseHub.repository.UserRepository;
-import com.jsp.CourseHub.response.ResponseStructure;
-import com.jsp.CourseHub.service.EmailService;
-import com.jsp.CourseHub.service.UserService;
+import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.service.UserService;
 
 import jakarta.validation.Valid;
 

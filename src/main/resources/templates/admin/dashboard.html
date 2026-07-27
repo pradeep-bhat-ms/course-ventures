@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout('Dashboard - Admin', ~{::section})}">
+<body>
+    <section>
+        <div class="mb-4" style="margin-bottom: 24px;">
+            <h1 class="hero-title" style="font-size: 32px; text-align: left; margin-bottom: 6px;">Platform Statistics</h1>
+            <p class="hero-subtitle" style="text-align: left; margin: 0; font-size: 15px;">Real-time overview of active users, courses, and platform engagement.</p>
+        </div>
+
+        <style>
+            .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+            .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+            .stat-card { padding: 24px; position: relative; overflow: hidden; }
+            .stat-icon { font-size: 28px; position: absolute; top: 20px; right: 20px; opacity: 0.3; }
+            .stat-value { font-size: 40px; font-weight: 800; margin: 12px 0 6px; font-family: 'Outfit', sans-serif; color: var(--text-primary); }
+        </style>
+
+        <div class="grid-4 mb-4" style="margin-bottom: 24px;">
+            <div class="glass-panel stat-card">
+                <i class="bi bi-people-fill stat-icon" style="color: #6366f1;"></i>
+                <span class="course-category">Total Students</span>
+                <div class="stat-value" th:text="${statistics.totalStudents}">0</div>
+                <span class="badge-custom badge-info"><i class="bi bi-person-check-fill"></i> Active Platform Users</span>
+            </div>
+
+            <div class="glass-panel stat-card">
+                <i class="bi bi-person-badge-fill stat-icon" style="color: #10b981;"></i>
+                <span class="course-category" style="color: #10b981;">Total Trainers</span>
+                <div class="stat-value" th:text="${statistics.totalTrainers}">0</div>
+                <span class="badge-custom badge-success"><i class="bi bi-shield-check"></i> Verified Instructors</span>
+            </div>
+
+            <div class="glass-panel stat-card">
+                <i class="bi bi-journal-bookmark-fill stat-icon" style="color: #06b6d4;"></i>
+                <span class="course-category" style="color: #06b6d4;">Total Courses</span>
+                <div class="stat-value" th:text="${statistics.totalCourses}">0</div>
+                <span class="badge-custom badge-info"><i class="bi bi-book-half"></i> Catalog Size</span>
+            </div>
+
+            <div class="glass-panel stat-card">
+                <i class="bi bi-card-checklist stat-icon" style="color: #f59e0b;"></i>
+                <span class="course-category" style="color: #f59e0b;">Total Enrollments</span>
+                <div class="stat-value" th:text="${statistics.totalEnrollments}">0</div>
+                <span class="badge-custom badge-warning"><i class="bi bi-graph-up-arrow"></i> Active Registrations</span>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="glass-panel stat-card">
+                <i class="bi bi-award-fill stat-icon" style="color: #a855f7;"></i>
+                <span class="course-category" style="color: #a855f7;">Completed Courses</span>
+                <div class="stat-value" th:text="${statistics.completedCourses}">0</div>
+                <p style="color: var(--text-secondary); font-size: 14px;">Total certificates awarded across all enrolled modules.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

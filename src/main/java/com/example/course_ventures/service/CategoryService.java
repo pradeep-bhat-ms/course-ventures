@@ -49,4 +49,9 @@ public class CategoryService {
         return "Category Deleted Successfully";
     }
 
+	public List<Category> getAllCategories() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

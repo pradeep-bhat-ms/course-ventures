@@ -15,17 +15,17 @@ import com.example.course_ventures.repository.CourseRepository;
 public class CourseService {
 	
 	@Autowired
-	CourseRepository courseRepo;
+	private CourseRepository courseRepository;;
 	
 	@Autowired
 	CategoryService categoryService;
 	
 	@Autowired
-	TrainerService  trainerService;
+	private TrainerService trainerService;;
 	
-	public Course save(Course c,int trainerid,int categoryId) {
+	public Course saveCourse(Course c, int trainerId, int categoryId) {
 		com.example.course_ventures.entity.Category category=categoryService.findCategoryById(categoryId);
-		Trainer trainer=trainerService.findTrainerById(trainerid);
+		Trainer trainer=trainerService.findTrainerById(trainerId);
 		
 		c.setCategory(category);
 		c.setTrainer(trainer);
@@ -73,8 +73,8 @@ public class CourseService {
 	    return courseRepo.save(course);
 	}
 
-	public Map<String, Object> getAllCourses() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Course> getAllCourses() {
+	    return courseRepo.findAll();
+	
 	}
 }

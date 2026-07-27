@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.MockTestAttempt;
-import com.jsp.CourseHub.response.ResponseStructure;
-import com.jsp.CourseHub.service.MockTestAttemptService;
+import com.example.course_ventures.entity.MocktestAttempt;
+import com.example.course_ventures.response.ResponseStructure;
+import com.example.course_ventures.service.MockTestAttemptService;
+
 
 
 @RestController
@@ -27,13 +28,13 @@ public class MockTestAttemptController {
 	private MockTestAttemptService mockTestAttemptService;
 
 	@PostMapping("/submit")
-	public ResponseEntity<ResponseStructure<MockTestAttempt>> submitAttempt(
+	public ResponseEntity<ResponseStructure<MocktestAttempt>> submitAttempt(
 			@RequestParam int studentId,
 			@RequestParam int mockTestId,
 			@RequestBody Map<Integer, String> answers) {
-		MockTestAttempt attempt = mockTestAttemptService.submitAttempt(studentId, mockTestId, answers);
+		MocktestAttempt attempt = mockTestAttemptService.saveAttempt(studentId, mockTestId, answers);
 
-		ResponseStructure<MockTestAttempt> rs = new ResponseStructure<>();
+		ResponseStructure<MocktestAttempt> rs = new ResponseStructure<>();
 		rs.setStatus(HttpStatus.CREATED.value());
 		rs.setMessage("Mock test submitted and graded successfully");
 		rs.setData(attempt);
@@ -42,16 +43,20 @@ public class MockTestAttemptController {
 	}
 
 	@GetMapping("/student/{studentId}")
-	public ResponseEntity<ResponseStructure<List<MockTestAttempt>>> getAttemptsByStudent(
-			@PathVariable int studentId) {
-		List<MockTestAttempt> attempts = mockTestAttemptService.getAttemptsByStudentId(studentId);
+	public ResponseEntity<ResponseStructure<List<MocktestAttempt>>> getAttemptsByStudent(
+	        @PathVariable int studentId) {
 
-		ResponseStructure<List<MockTestAttempt>> rs = new ResponseStructure<>();
-		rs.setStatus(HttpStatus.OK.value());
-		rs.setMessage("Mock test attempts retrieved successfully");
-		rs.setData(attempts);
+	    List<MocktestAttempt> attempts =
+	            mockTestAttemptService.getAttemptsByStudentId(studentId);
 
-		return new ResponseEntity<>(rs, HttpStatus.OK);
+	    ResponseStructure<List<MocktestAttempt>> rs =
+	            new ResponseStructure<>();
+
+	    rs.setStatus(HttpStatus.OK.value());
+	    rs.setMessage("Mock test attempts retrieved successfully");
+	    rs.setData(attempts);
+
+	    return new ResponseEntity<>(rs, HttpStatus.OK);
 	}
 }
 

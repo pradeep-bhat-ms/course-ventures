@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.Lesson;
-import com.jsp.CourseHub.entity.User;
-import com.jsp.CourseHub.repository.UserRepository;
-import com.jsp.CourseHub.service.LessonService;
-
+import com.example.course_ventures.entity.Lessons;
+import com.example.course_ventures.entity.User;
+import com.example.course_ventures.enums.Role;
+import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.service.LessonService;
 
 @RestController
 @RequestMapping("/lesson")
@@ -31,28 +31,28 @@ public class LessonController {
 	UserRepository userRepository;
 
 	@PostMapping("/save")
-	public Lesson saveLesson(@RequestBody Lesson lesson, @RequestParam int moduleId, Authentication authentication) {
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || (user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER && user.getRole() != com.jsp.CourseHub.enums.Role.ADMIN)) {
+	public Lessons saveLesson(@RequestBody Lessons lesson, @RequestParam int moduleId, Authentication authentication) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || (user.getRole() != Role.TRAINER && user.getRole() !=Role.ADMIN)) {
 			throw new IllegalStateException("Only trainers can create lessons.");
 		}
 		return lessonService.saveLesson(lesson, moduleId);
 	}
 
 	@GetMapping("/module/{moduleId}")
-	public List<Lesson> getLessonsByModuleId(@PathVariable int moduleId) {
+	public List<Lessons> getLessonsByModuleId(@PathVariable int moduleId) {
 		return lessonService.getLessonsByModuleId(moduleId);
 	}
 
 	@GetMapping("/{id}")
-	public Lesson getLessonById(@PathVariable int id) {
-		return lessonService.getLessonById(id);
+	public Lessons getLessonById(@PathVariable int id) {
+		return lessonService.findLessonById(id);
 	}
 
 	@PutMapping("/update/{id}")
-	public Lesson updateLesson(@PathVariable int id, @RequestBody Lesson lessonDetails, Authentication authentication) {
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || (user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER && user.getRole() != com.jsp.CourseHub.enums.Role.ADMIN)) {
+	public Lessons updateLesson(@PathVariable int id, @RequestBody Lessons lessonDetails, Authentication authentication) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || (user.getRole() != Role.TRAINER && user.getRole() != Role.ADMIN)) {
 			throw new IllegalStateException("Only trainers can update lessons.");
 		}
 		return lessonService.updateLesson(id, lessonDetails);
@@ -60,14 +60,12 @@ public class LessonController {
 
 	@DeleteMapping("/delete/{id}")
 	public String deleteLesson(@PathVariable int id, Authentication authentication) {
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || (user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER && user.getRole() != com.jsp.CourseHub.enums.Role.ADMIN)) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || (user.getRole() != Role.TRAINER && user.getRole() != Role.ADMIN)) {
 			throw new IllegalStateException("Only trainers can delete lessons.");
 		}
 		lessonService.deleteLesson(id);
 		return "Lesson Deleted Successfully";
 	}
-}
-
 
 }

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - CourseHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .otp-input {
+            text-align: center;
+            letter-spacing: 8px;
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--border-color);
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card glass-panel">
+            <a href="/" class="brand-logo" style="display: block; text-align: center; margin-bottom: 24px;">
+                <i class="bi bi-rocket-takeoff-fill me-1"></i> CourseHub
+            </a>
+            <h2 class="auth-title">Verify Your Email</h2>
+            <p class="auth-subtitle">We sent a 6-digit verification code to your email address.</p>
+
+            <div id="alert-success" class="alert alert-success" style="display: none;"></div>
+            <div id="alert-error" class="alert alert-error" style="display: none;"></div>
+
+            <form onsubmit="submitOtp(event)">
+                <input type="hidden" id="userId" th:value="${userId}">
+                
+                <div th:if="${userId == null}" class="form-group">
+                    <label for="userIdInput" class="form-label">User ID</label>
+                    <input type="number" id="userIdInput" class="form-control" placeholder="Enter your User ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="otp" class="form-label">One-Time Password (OTP)</label>
+                    <input type="text" id="otp" class="form-control otp-input" placeholder="••••••" required maxlength="6" minlength="6">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 14px;">
+                    <i class="bi bi-patch-check-fill me-1"></i> Verify Email
+                </button>
+            </form>
+
+            <p style="text-align: center; margin-top: 24px; color: var(--text-secondary); font-size: 14px;">
+                Didn't receive code? 
+                <span id="timer-text">Resend in <span id="timer-count" style="font-weight: 700; color: var(--text-primary);">60</span>s</span>
+                <a href="javascript:void(0)" id="resend-link" onclick="resendOtp()" style="display: none; color: var(--primary-color); text-decoration: none; font-weight: 600;">Resend OTP</a>
+            </p>
+            <p style="text-align: center; margin-top: 12px; font-size: 14px;">
+                <a href="/login" style="color: var(--text-secondary); text-decoration: none;"><i class="bi bi-arrow-left me-1"></i> Back to Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let countdown = 60;
+        let timerInterval;
+
+        function startTimer() {
+            countdown = 60;
+            document.getElementById('timer-text').style.display = 'inline';
+            document.getElementById('resend-link').style.display = 'none';
+            document.getElementById('timer-count').textContent = countdown;
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                countdown--;
+                document.getElementById('timer-count').textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer-text').style.display = 'none';
+                    document.getElementById('resend-link').style.display = 'inline';
+                }
+            }, 1000);
+        }
+
+        async function resendOtp() {
+            let userId = document.getElementById('userId') ? document.getElementById('userId').value : null;
+            if (!userId) userId = document.getElementById('userIdInput').value;
+            if (!userId) {
+                alert('Please enter your User ID first to resend OTP.');
+                return;
+            }
+            
+            const errBox = document.getElementById('alert-error');
+            const successBox = document.getElementById('alert-success');
+            errBox.style.display = 'none';
+            successBox.style.display = 'none';
+
+            try {
+                const response = await fetch(`/user/resend-otp?userId=${userId}`, { method: 'POST' });
+                const resultText = await response.text();
+                if (response.ok) {
+                    successBox.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> OTP resent successfully! Check your email.';
+                    successBox.style.display = 'block';
+                    startTimer();
+                } else {
+                    errBox.textContent = resultText || "Failed to resend OTP.";
+                    errBox.style.display = 'block';
+                }
+            } catch (err) {
+                errBox.textContent = "Network error occurred while resending OTP.";
+                errBox.style.display = 'block';
+            }
+        }
+
+        async function submitOtp(event) {
+            event.preventDefault();
+            let userId = document.getElementById('userId') ? document.getElementById('userId').value : null;
+            if (!userId) userId = document.getElementById('userIdInput').value;
+            const otp = document.getElementById('otp').value;
+            
+            const errBox = document.getElementById('alert-error');
+            const successBox = document.getElementById('alert-success');
+            errBox.style.display = 'none';
+            successBox.style.display = 'none';
+
+            try {
+                const response = await fetch(`/user/verify?userId=${userId}&otp=${otp}`, { method: 'POST' });
+                const resultText = await response.text();
+                
+                if (response.ok && resultText.includes("Verified")) {
+                    successBox.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Email verified successfully! Redirecting...';
+                    successBox.style.display = 'block';
+                    setTimeout(() => { window.location.href = "/login?verified=true"; }, 2000);
+                } else {
+                    errBox.textContent = resultText || "Verification failed. Invalid OTP.";
+                    errBox.style.display = 'block';
+                }
+            } catch (err) {
+                errBox.textContent = "Network error occurred.";
+                errBox.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => { startTimer(); });
+    </script>
+</body>
+</html>

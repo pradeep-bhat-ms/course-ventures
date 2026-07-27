@@ -11,5 +11,9 @@ package com.example.course_ventures.dto;
 		private String mobile;
 		private String email;
 		private boolean verified=false;
+		public void setQualification(String qualification) {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}

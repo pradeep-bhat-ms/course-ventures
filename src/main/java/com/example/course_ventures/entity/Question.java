@@ -1,4 +1,5 @@
 package com.example.course_ventures.entity;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -15,40 +16,31 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class Question {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
-	
-	@NotBlank(message = "Question text should not be empty")
-	private String questionText;
 
-	
-	@NotBlank(message="Option A Should not br empty")
-	private String optionA;
-	
-	@NotBlank(message="Option B Should not br empty")
-	private String optionB;
-	
-	@NotBlank(message="Option C Should not br empty")
-	private String optionC;
-	
-	@NotBlank(message="Option D Should not br empty")
-	private String optionD;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@NotBlank(message = "Correct option should not be empty")
-	@Pattern(regexp = "^[A-D]$", message = "Correct option must be A, B, C, or D")
-	private String correctOption;
+    @NotBlank(message = "Question text should not be empty")
+    private String questionText;
 
+    @NotBlank(message = "Option A should not be empty")
+    private String optionA;
 
-	@ManyToOne
-	@JsonBackReference
-   private MockTest mockTest;
+    @NotBlank(message = "Option B should not be empty")
+    private String optionB;
 
+    @NotBlank(message = "Option C should not be empty")
+    private String optionC;
 
-   public String getCorrectOption() {
-	// TODO Auto-generated method stub
-	return null;
-   }
+    @NotBlank(message = "Option D should not be empty")
+    private String optionD;
+
+    @NotBlank(message = "Correct option should not be empty")
+    @Pattern(regexp = "^[A-D]$", message = "Correct option must be A, B, C, or D")
+    private String correctOption;
+
+    @ManyToOne
+    @JsonBackReference
+    private MockTest mockTest;
 }

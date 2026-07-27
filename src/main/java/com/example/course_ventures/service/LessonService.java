@@ -53,4 +53,9 @@ public class LessonService {
         repo.delete(lesson);
         return "Lesson Deleted Successfully";
     }
+
+	public List<Lessons> getLessonsByModuleId(int moduleId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

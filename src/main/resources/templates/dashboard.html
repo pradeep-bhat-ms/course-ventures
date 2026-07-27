@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - CourseHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .progress-bar-bg { background: rgba(255, 255, 255, 0.08); height: 10px; border-radius: 6px; overflow: hidden; }
+        .progress-bar-fill { background: var(--accent-gradient); height: 100%; transition: var(--transition); }
+        .dark-select { background-color: var(--bg-dark) !important; color: var(--text-primary) !important; }
+    </style>
+</head>
+<body>
+    <header class="glass-header">
+        <div class="container nav-wrapper">
+            <a href="/" class="brand-logo"><i class="bi bi-rocket-takeoff-fill me-1"></i> CourseHub</a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link"><i class="bi bi-house-door-fill me-1"></i> Home</a>
+                <span style="color: var(--text-secondary); font-weight: 500;">
+                    <i class="bi bi-person-circle text-primary me-1"></i> Dashboard: <span th:text="${user.name}" style="color: var(--text-primary);">User Name</span>
+                </span>
+                <a href="/logout" class="btn btn-danger" style="padding: 6px 14px; font-size: 13px;"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dashboard-grid">
+            <div class="sidebar-menu glass-panel" style="padding: 20px; height: fit-content;">
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
+                    <i class="bi bi-grid-fill text-primary me-1"></i> Menu
+                </h3>
+                <div id="btn-enrolled" class="menu-item active" onclick="switchPane('enrolled')"><i class="bi bi-journal-check me-2"></i> My Courses</div>
+                <div id="btn-content" class="menu-item" onclick="switchPane('content')"><i class="bi bi-play-btn me-2"></i> Course Content</div>
+                <div id="btn-progress" class="menu-item" onclick="switchPane('progress')"><i class="bi bi-bar-chart-line me-2"></i> Progress</div>
+                <div id="btn-certificates" class="menu-item" onclick="switchPane('certificates')"><i class="bi bi-award me-2"></i> Certificates</div>
+                <div id="btn-reviews" class="menu-item" onclick="switchPane('reviews')"><i class="bi bi-star me-2"></i> Reviews</div>
+            </div>
+
+            <div class="dashboard-content">
+                <div id="msg-box" class="alert" style="display: none;"></div>
+
+                <div id="pane-enrolled" class="tab-pane active">
+                    <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 20px;"><i class="bi bi-journal-bookmark-fill text-primary me-2"></i> My Enrolled Courses</h2>
+                    <div id="enrolled-courses-container" class="course-grid"></div>
+                </div>
+
+                <div id="pane-content" class="tab-pane">
+                    <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 20px;"><i class="bi bi-collection-play-fill text-primary me-2"></i> Course Content</h2>
+                    <div class="glass-panel" style="padding: 30px; margin-bottom: 20px;">
+                        <label for="content-course" class="form-label">Select Course</label>
+                        <select id="content-course" class="form-control dark-select" required onchange="loadCourseModules(this.value)">
+                            <option value="" disabled selected>Select Course</option>
+                        </select>
+                    </div>
+                    <div id="course-modules-container"></div>
+                </div>
+
+                <div id="pane-progress" class="tab-pane">
+                    <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 20px;"><i class="bi bi-graph-up-arrow text-primary me-2"></i> Course Progress</h2>
+                    <div class="glass-panel" style="padding: 30px;">
+                        <div id="progress-list"></div>
+                    </div>
+                </div>
+
+                <div id="pane-certificates" class="tab-pane">
+                    <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 20px;"><i class="bi bi-award-fill text-warning me-2"></i> Certificates</h2>
+                    <div class="glass-panel" style="padding: 30px; margin-bottom: 20px;">
+                        <form id="form-certificate" onsubmit="generateCertificate(event)">
+                            <div class="form-group">
+                                <label for="cert-course" class="form-label">Select Completed Course</label>
+                                <select id="cert-course" name="courseId" class="form-control dark-select" required>
+                                    <option value="" disabled selected>Select Course</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 12px 28px;">Generate Certificate</button>
+                        </form>
+                    </div>
+                    <div class="glass-panel" style="padding: 30px;">
+                        <div id="certificates-list"></div>
+                    </div>
+                </div>
+
+                <div id="pane-reviews" class="tab-pane">
+                    <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 20px;"><i class="bi bi-star-fill text-warning me-2"></i> Reviews</h2>
+                    <div class="glass-panel" style="padding: 30px; margin-bottom: 20px;">
+                        <form id="form-review" onsubmit="addReview(event)">
+                            <div class="form-group">
+                                <label for="review-course" class="form-label">Select Course</label>
+                                <select id="review-course" name="courseId" class="form-control dark-select" required>
+                                    <option value="" disabled selected>Select Course</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="review-rating" class="form-label">Rating</label>
+                                <select id="review-rating" name="rating" class="form-control dark-select" required>
+                                    <option value="5">★★★★★ (5)</option>
+                                    <option value="4">★★★★☆ (4)</option>
+                                    <option value="3">★★★☆☆ (3)</option>
+                                    <option value="2">★★☆☆☆ (2)</option>
+                                    <option value="1">★☆☆☆☆ (1)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="review-comment" class="form-label">Comment</label>
+                                <textarea id="review-comment" name="comment" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 12px 28px;">Submit Review</button>
+                        </form>
+                    </div>
+                    <div class="glass-panel" style="padding: 30px;">
+                        <div id="reviews-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container"><p>&copy; 2026 CourseHub Platform. All rights reserved.</p></div>
+    </footer>
+
+    <script th:inline="javascript">
+        const studentId = /*[[${user.id}]]*/ 0;
+
+        function switchPane(pane) {
+            ['enrolled', 'content', 'progress', 'certificates', 'reviews'].forEach(p => {
+                document.getElementById(`btn-${p}`)?.classList.toggle('active', p === pane);
+                document.getElementById(`pane-${p}`)?.classList.toggle('active', p === pane);
+            });
+            document.getElementById('msg-box').style.display = 'none';
+
+            if (pane === 'enrolled') loadEnrolledCourses();
+            if (pane === 'content') loadContentData();
+            if (pane === 'progress') loadProgressData();
+            if (pane === 'certificates') loadCertificateData();
+            if (pane === 'reviews') loadReviewData();
+        }
+
+        function showMessage(text, isError = false) {
+            const box = document.getElementById('msg-box');
+            box.textContent = text;
+            box.className = isError ? 'alert alert-error' : 'alert alert-success';
+            box.style.display = 'block';
+        }
+
+        async function loadEnrolledCourses() {
+            const response = await fetch(`/enrollement/student?studentId=${studentId}`);
+            const enrollments = await response.json();
+            const container = document.getElementById('enrolled-courses-container');
+            if (enrollments.length === 0) {
+                container.innerHTML = '<div class="glass-panel" style="text-align: center; padding: 40px; color: var(--text-secondary);">No enrolled courses yet.</div>';
+                return;
+            }
+            container.innerHTML = enrollments.map(e => `
+                <div class="course-card glass-panel">
+                    <div class="course-body">
+                        <h3 class="course-title">${e.course.title}</h3>
+                        <p class="course-desc">${e.course.discription}</p>
+                        <div class="course-footer">
+                            <span class="course-price">₹${e.course.price}</span>
+                            <span class="badge-custom badge-success">${e.status}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadContentData() {
+            const response = await fetch(`/enrollement/student?studentId=${studentId}`);
+            const enrollments = await response.json();
+            const courseSelect = document.getElementById('content-course');
+            courseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>' + 
+                enrollments.map(e => `<option value="${e.course.id}">${e.course.title}</option>`).join('');
+        }
+
+        async function loadCourseModules(courseId) {
+            if (!courseId) return;
+            const response = await fetch(`/module/course/${courseId}`);
+            const modules = await response.json();
+            const container = document.getElementById('course-modules-container');
+
+            container.innerHTML = await Promise.all(modules.map(async (m) => {
+                const lessonsResponse = await fetch(`/lesson/module/${m.id}`);
+                const lessons = await lessonsResponse.json();
+                const moduleProgressResponse = await fetch(`/module-progress/module/${m.id}`);
+                const moduleProgressList = await moduleProgressResponse.json();
+                const studentModuleProgress = moduleProgressList.find(mp => mp.student.id === studentId);
+                const completedLessons = studentModuleProgress ? studentModuleProgress.completedLessons : 0;
+                const totalLessons = lessons.length;
+                const progressPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+                return `
+                    <div class="glass-panel" style="padding: 25px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <h3 style="font-size: 18px; font-weight: 700;">${m.title}</h3>
+                            <span style="color: var(--text-secondary); font-size: 13px;">${completedLessons}/${totalLessons} (${progressPercent}%)</span>
+                        </div>
+                        <div class="progress-bar-bg" style="margin-bottom: 20px;"><div class="progress-bar-fill" style="width: ${progressPercent}%"></div></div>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            ${lessons.map(l => {
+                                const isCompleted = completedLessons > l.orderIndex;
+                                return `
+                                    <div style="padding: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; ${isCompleted ? 'background: rgba(16, 185, 129, 0.08);' : ''}">
+                                        <div>
+                                            <div style="font-weight: 600;">${l.title}</div>
+                                            <div style="color: var(--text-secondary); font-size: 13px;">${l.contentType} | ${l.durationMinutes} mins</div>
+                                        </div>
+                                        <button class="btn ${isCompleted ? 'btn-success' : 'btn-secondary'}" style="padding: 6px 14px; font-size: 13px;" onclick="markLessonComplete(${m.id}, ${l.orderIndex})">
+                                            ${isCompleted ? '✓ Done' : 'Mark Complete'}
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            })).then(html => html.join(''));
+        }
+
+        async function markLessonComplete(moduleId, lessonOrderIndex) {
+            const response = await fetch(`/module-progress/update?studentId=${studentId}&moduleId=${moduleId}&completedLessons=${lessonOrderIndex + 1}`, { method: 'POST' });
+            if (response.ok) {
+                showMessage("Progress recorded!");
+                loadCourseModules(document.getElementById('content-course').value);
+            }
+        }
+
+        async function loadProgressData() {
+            const progressResponse = await fetch(`/course-progress/student?studentId=${studentId}`);
+            const progressList = await progressResponse.json();
+            document.getElementById('progress-list').innerHTML = progressList.map(p => `
+                <div style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                    <div style="font-weight: 700;">${p.course.title}</div>
+                    <div class="progress-bar-bg" style="margin-top: 8px;"><div class="progress-bar-fill" style="width: ${p.progressPercentage}%"></div></div>
+                    <span style="color: var(--text-secondary); font-size: 13px;">Completion: ${p.progressPercentage}%</span>
+                </div>
+            `).join('');
+        }
+
+        async function loadCertificateData() {
+            const certResponse = await fetch(`/certificate/student?studentId=${studentId}`);
+            const certificates = await certResponse.json();
+            document.getElementById('certificates-list').innerHTML = certificates.map(c => `
+                <div style="padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 700;">${c.course.title}</div>
+                        <div style="color: var(--text-secondary); font-size: 13px;">ID: ${c.certificateNumber}</div>
+                    </div>
+                    <a href="/certificate/download/${c.certificateNumber}" target="_blank" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px;">Download PDF</a>
+                </div>
+            `).join('');
+        }
+
+        async function generateCertificate(event) {
+            event.preventDefault();
+            const courseId = parseInt(document.getElementById('cert-course').value);
+            const response = await fetch('/certificate/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ studentId, courseId })
+            });
+            if (response.ok) loadCertificateData();
+        }
+
+        async function loadReviewData() {
+            const response = await fetch(`/review/student?studentId=${studentId}`);
+            const reviews = await response.json();
+            document.getElementById('reviews-list').innerHTML = reviews.map(r => `
+                <div style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                    <div style="font-weight: 700;">${r.course.title}</div>
+                    <div style="color: #fbbf24;">${'★'.repeat(r.rating)}</div>
+                    <div style="color: var(--text-secondary); font-size: 14px;">${r.comment}</div>
+                </div>
+            `).join('');
+        }
+
+        async function addReview(event) {
+            event.preventDefault();
+            const courseId = parseInt(document.getElementById('review-course').value);
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-comment').value;
+
+            const response = await fetch('/review/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ studentId, courseId, rating, comment })
+            });
+            if (response.ok) loadReviewData();
+        }
+
+        loadEnrolledCourses();
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout('Students - Admin', ~{::section})}">
+<body>
+    <section>
+        <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 6px;">All Students</h1>
+            <p style="color: var(--text-secondary); margin: 0; font-size: 15px;">Review student accounts and verify credentials.</p>
+        </div>
+
+        <div class="glass-panel" style="overflow: hidden;">
+            <table class="glass-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Info</th>
+                        <th>College & Qualification</th>
+                        <th>Verified</th>
+                        <th>Approval Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student : ${students}">
+                        <td style="color: var(--text-secondary); font-weight: 600;" th:text="'#' + ${student.id}">#1</td>
+                        <td>
+                            <div style="font-weight: 700;" th:text="${student.name}">John Doe</div>
+                            <div style="color: var(--text-secondary); font-size: 13px;" th:text="${student.email}">john@example.com</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 14px;" th:text="${student.collegeName}">ABC College</div>
+                            <div style="color: var(--text-secondary); font-size: 12px;" th:text="${student.qualification}">B.Tech</div>
+                        </td>
+                        <td>
+                            <span th:if="${student.verified}" class="badge-custom badge-success"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                            <span th:unless="${student.verified}" class="badge-custom badge-danger"><i class="bi bi-x-circle-fill"></i> Unverified</span>
+                        </td>
+                        <td>
+                            <span th:if="${student.approved}" class="badge-custom badge-success"><i class="bi bi-check-lg"></i> Approved</span>
+                            <button th:unless="${student.approved}" class="btn btn-primary" style="padding: 6px 14px; font-size: 13px;" th:onclick="'approveUser(' + ${student.id} + ')'">
+                                <i class="bi bi-person-check-fill"></i> Approve
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            async function approveUser(userId) {
+                if (confirm('Approve this student access?')) {
+                    try {
+                        const response = await fetch(`/admin/approve/${userId}`, { method: 'POST' });
+                        if (response.ok) window.location.reload();
+                    } catch (err) { alert('Error approving user'); }
+                }
+            }
+        </script>
+    </section>
+</body>
+</html>

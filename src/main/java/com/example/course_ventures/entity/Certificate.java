@@ -15,26 +15,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class Certificate {
-	
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private int id;
-	    
-		@ManyToOne
-	    private Student student;
-		
-		@ManyToOne
-	    private Course course;
-	    
-		
-	    @NotBlank(message = "Certificate number should not be empty")
-	    private String certificateNumber;
 
-	    private String certificateUrl;
-	 
-	    
-	    private LocalDateTime issueDate=LocalDateTime.now();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	    
-	
+    @ManyToOne
+    private Student student;
+
+    @ManyToOne
+    private Course course;
+
+    @NotBlank(message = "Certificate number should not be empty")
+    private String certificateNumber;
+
+    private String certificateUrl;
+
+    private LocalDateTime issueDate = LocalDateTime.now();
 }
