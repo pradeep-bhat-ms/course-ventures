@@ -58,5 +58,10 @@ import com.example.course_ventures.repository.TrainerRepository;
 
 	        return "Trainer Deleted Successfully";
 	    }
+
+	    public List<Trainer> getAllTrainers() {
+	        return repo.findAll();
+	    
+		}
 	
 }

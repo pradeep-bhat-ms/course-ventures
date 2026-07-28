@@ -1,7 +1,6 @@
 package com.example.course_ventures.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,26 +28,26 @@ public class CourseService {
 		
 		c.setCategory(category);
 		c.setTrainer(trainer);
-     	return	courseRepo.save(c);
+     	return	courseRepository.save(c);
 		
 	}
 	
 	// find by id
 	public Course findCourseById(int id) {
-	    return courseRepo.findById(id).orElseThrow(() -> new CourseNotFound());
+	    return courseRepository.findById(id).orElseThrow(() -> new CourseNotFound());
 	}
 	
 	// find all
 	public List<Course> findAllCourse() 
 	{
-	    return courseRepo.findAll();
+	    return courseRepository.findAll();
 	}
 	
 	// delete by id 
 	public String deleteCourse(int id) 
 	{
 	    Course course = findCourseById(id);
-	    courseRepo.delete(course);
+	    courseRepository.delete(course);
 	    return "Course Deleted Successfully";
 	}
 	
@@ -70,11 +69,11 @@ public class CourseService {
 	    course.setPrice(courseDetails.getPrice());
 	    course.setDuration(courseDetails.getDuration());
 
-	    return courseRepo.save(course);
+	    return courseRepository.save(course);
 	}
 
 	public List<Course> getAllCourses() {
-	    return courseRepo.findAll();
+	    return courseRepository.findAll();
 	
 	}
 }

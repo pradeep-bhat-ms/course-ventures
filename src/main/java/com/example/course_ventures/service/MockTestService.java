@@ -56,7 +56,7 @@ public class MockTestService {
 	        MockTest test = findMockTestById(id);
 
 	        test.setTestname(testDetails.getTestname());
-	        test.setTestduration(testDetails.getTestduration());
+	        test.setTestDuration(testDetails.getTestDuration());
 	        test.setResult(testDetails.getResult());
 
 	        return repo.save(test);

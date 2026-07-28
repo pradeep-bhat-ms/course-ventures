@@ -38,13 +38,13 @@ public class CertificateController {
 	}
 
 	@GetMapping("/verify")
-	public CertificateResponseDto verifyCertificate(@RequestParam String certificateNumber) {
-		return certificateService.getCertificateByNumber(certificateNumber);
+	public Certificate verifyCertificate(@RequestParam String certificateNumber) {
+		return certificateService.getCertificateEntityByNumber(certificateNumber);
 	}
 
 	@GetMapping("/student")
-	public List<java.security.cert.Certificate> getStudentCertificates(@RequestParam int studentId) {
-		return certificateRepository.findByStudentId(studentId);
+	public List<Certificate> getStudentCertificates(@RequestParam int studentId) {
+	    return certificateRepository.findByStudentId(studentId);
 	}
 
 	@GetMapping("/download/{certificateNumber}")

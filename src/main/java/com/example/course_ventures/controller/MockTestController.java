@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.MockTest;
-import com.jsp.CourseHub.entity.Question;
-import com.jsp.CourseHub.entity.User;
-import com.jsp.CourseHub.repository.UserRepository;
-import com.jsp.CourseHub.response.ResponseStructure;
-import com.jsp.CourseHub.service.MockTestService;
+import com.example.course_ventures.entity.MockTest;
+import com.example.course_ventures.entity.Question;
+import com.example.course_ventures.entity.User;
+import com.example.course_ventures.enums.Role;
+import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.response.ResponseStructure;
+import com.example.course_ventures.service.MockTestService;
+
+
 
 
 @RestController
@@ -64,7 +67,7 @@ public class MockTestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseStructure<MockTest>> getMockTestById(
 			@PathVariable int id) {
-		MockTest mockTest = mockTestService.getMockTestById(id);
+		MockTest mockTest = mockTestService.findMockTestById(id);
 
 		ResponseStructure<MockTest> rs = new ResponseStructure<>();
 		rs.setStatus(HttpStatus.OK.value());
@@ -93,12 +96,12 @@ public class MockTestController {
 			@PathVariable int id,
 			Authentication authentication) {
 
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || user.getRole() != Role.TRAINER) {
 			throw new IllegalStateException("Only trainers can delete mock tests.");
 		}
 
-		MockTest mockTest = mockTestService.getMockTestById(id);
+		MockTest mockTest = mockTestService.findMockTestById(id);
 		if (mockTest.getCourse() == null || mockTest.getCourse().getTrainer() == null
 				|| mockTest.getCourse().getTrainer().getId() != user.getId()) {
 			throw new IllegalStateException("You are not authorized to delete this mock test.");

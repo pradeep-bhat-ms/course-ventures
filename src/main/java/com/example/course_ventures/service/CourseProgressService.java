@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.course_ventures.dto.CourseProgressRequestDto;
 import com.example.course_ventures.dto.CourseProgressResponseDto;
 import com.example.course_ventures.dto.CourseResponseDto;
+import com.example.course_ventures.dto.StudentResponseDto;
 import com.example.course_ventures.entity.Course;
 import com.example.course_ventures.entity.CourseProgress;
 import com.example.course_ventures.entity.Student;
@@ -91,15 +92,15 @@ public class CourseProgressService {
 		return responseDto;
 	}
 
-	private com.jsp.CourseHub.dto.StudentResponseDto toStudentDto(Student student) {
+	private StudentResponseDto toStudentDto(Student student) {
 		if (student == null) {
 			return null;
 		}
-		com.jsp.CourseHub.dto.StudentResponseDto dto = new com.jsp.CourseHub.dto.StudentResponseDto();
+		StudentResponseDto dto = new StudentResponseDto();
 		dto.setId(student.getId());
 		dto.setName(student.getName());
 		dto.setEmail(student.getEmail());
-		dto.setCollegeName(student.getCollegename());
+		dto.setName(student.getCollegename());
 		dto.setQualification(student.getQualification());
 		dto.setVerified(student.isVerified());
 		return dto;

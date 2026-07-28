@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.course_ventures.entity.User;
 import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.response.ResponseStructure;
+import com.example.course_ventures.service.EmailSender;
 import com.example.course_ventures.service.UserService;
 
 import jakarta.validation.Valid;
@@ -28,7 +31,7 @@ public class UserController {
 	UserService userService;
 	
 	@Autowired
-	EmailService emService;
+	EmailSender emailSender;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -36,7 +39,7 @@ public class UserController {
 	@PostMapping("/save")
 	public ResponseEntity<ResponseStructure<User>> saveUser(@Valid @RequestBody User user) {
 		// Check if email already exists
-		User existingUser = userRepository.findByEmail(user.getEmail() != null ? user.getEmail().trim().toLowerCase() : null);
+		User existingUser = userRepository.findByemail(user.getEmail() != null ? user.getEmail().trim().toLowerCase() : null);
 		if (existingUser != null) {
 			ResponseStructure<User> rs = new ResponseStructure<>();
 			rs.setStatus(HttpStatus.CONFLICT.value());
@@ -56,7 +59,7 @@ public class UserController {
 	
 	@GetMapping("/fetch")
 	public List<User> getAllUser(){
-		return userService.getAllUsers();
+		return userService.findAllUsers();
 	}
 	@PostMapping("/verify")
 	public String verifyOtp(
@@ -80,7 +83,7 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<String>> requestForgotPassword(@RequestParam String email) {
 		ResponseStructure<String> rs = new ResponseStructure<>();
 		try {
-			String response = userService.requestForgotPassword(email);
+			String response = userService.requestForgetPassword(email);
 			rs.setStatus(HttpStatus.OK.value());
 			rs.setMessage(response);
 			rs.setData(response);

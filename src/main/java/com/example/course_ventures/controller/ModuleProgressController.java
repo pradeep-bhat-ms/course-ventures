@@ -1,6 +1,6 @@
 package com.example.course_ventures.controller;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.ModuleProgress;
-import com.jsp.CourseHub.service.ModuleProgressService;
+import com.example.course_ventures.entity.ModuleProgress;
+import com.example.course_ventures.service.ModuleProgressService;
+
 
 
 
@@ -29,12 +30,12 @@ public class ModuleProgressController {
 	}
 
 	@GetMapping("/student/{studentId}")
-	public List<ModuleProgress> getStudentProgress(@PathVariable int studentId) {
+	public Optional<ModuleProgress> getStudentProgress(@PathVariable int studentId) {
 		return moduleProgressService.getStudentProgress(studentId);
 	}
 
 	@GetMapping("/module/{moduleId}")
-	public List<ModuleProgress> getModuleProgress(@PathVariable int moduleId) {
+	public Optional<ModuleProgress> getModuleProgress(@PathVariable int moduleId) {
 		return moduleProgressService.getModuleProgress(moduleId);
 	}
 

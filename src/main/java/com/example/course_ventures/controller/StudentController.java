@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.Student;
-import com.jsp.CourseHub.entity.User;
-import com.jsp.CourseHub.repository.UserRepository;
-import com.jsp.CourseHub.response.ResponseStructure;
-import com.jsp.CourseHub.service.StudentService;
-
+import com.example.course_ventures.entity.Student;
+import com.example.course_ventures.entity.User;
+import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.response.ResponseStructure;
+import com.example.course_ventures.service.StudentService;
 
 @RestController
 @RequestMapping("/student")
@@ -31,7 +30,7 @@ public class StudentController {
 	@PostMapping("/save")
 	public ResponseEntity<ResponseStructure<Student>> saveStudent(@RequestBody Student student) {
 		// Check if email already exists
-		User existingUser = userRepository.findByEmail(student.getEmail() != null ? student.getEmail().trim().toLowerCase() : null);
+		User existingUser = userRepository.findByemail(student.getEmail() != null ? student.getEmail().trim().toLowerCase() : null);
 		if (existingUser != null) {
 			ResponseStructure<Student> rs = new ResponseStructure<>();
 			rs.setStatus(HttpStatus.CONFLICT.value());
@@ -51,7 +50,6 @@ public class StudentController {
 
 	@GetMapping("/fetch")
 	public List<Student> getAllStudents() {
-
-		return studentService.getAllStudents();
+	    return studentService.findAllStudent();
 	}
 }

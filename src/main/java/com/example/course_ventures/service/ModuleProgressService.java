@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.course_ventures.entity.Lessons;
-import com.example.course_ventures.entity.Module;
 import com.example.course_ventures.entity.ModuleProgress;
 import com.example.course_ventures.entity.Student;
-import com.example.course_ventures.repository.LessonRepository;
+import com.example.course_ventures.repository.LessonsRepository;
 import com.example.course_ventures.repository.ModuleProgressRepository;
 import com.example.course_ventures.repository.ModuleRepository;
 
@@ -26,7 +25,7 @@ public class ModuleProgressService {
 	ModuleRepository moduleRepository;
 
 	@Autowired
-	LessonRepository lessonRepository;
+	LessonsRepository lessonsRepository;
 
 	@Autowired
 	StudentService studentService;
@@ -41,8 +40,7 @@ public class ModuleProgressService {
 		com.example.course_ventures.entity.Module module = moduleRepository.findById(moduleId)
 				.orElseThrow(() -> new RuntimeException("Module Not Found"));
 		
-		Optional<Lessons> lessons = lessonRepository.findById(moduleId);
-		
+		List<Lessons> lessons = lessonsRepository.findByModuleId(moduleId);		
 		ModuleProgress progress = new ModuleProgress();
 		progress.setStudent(student);
 		progress.setModule(module);
@@ -64,12 +62,12 @@ public class ModuleProgressService {
 		return moduleProgressRepository.save(progress);
 	}
 
-	public Optional<Module> getStudentProgress(int studentId) {
-		return moduleProgressRepository.findById(studentId);
+	public Optional<ModuleProgress> getStudentProgress(int studentId) {
+	    return moduleProgressRepository.findById(studentId);
 	}
 
-	public Optional<Module> getModuleProgress(int moduleId) {
-		return moduleProgressRepository.findById(moduleId);
+	public Optional<ModuleProgress> getModuleProgress(int moduleId) {
+	    return moduleProgressRepository.findById(moduleId);
 	}
 
 	public int calculateCourseProgress(int studentId, int courseId) {

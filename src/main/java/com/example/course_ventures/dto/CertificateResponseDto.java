@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CertificateResponseDto {
 
-    private int id;
-    private StudentResponseDto student;
-    private CourseResponseDto course;
-    private String certificateDescription;
-    private String certificateName;
-    private LocalDateTime issueDate;
-    private String certificateUrl;
+	private int id;
+	private StudentResponseDto student;
+	private CourseResponseDto course;
+	private String certificateNumber;
+	private LocalDateTime issueDate;
+	private String certificateUrl;
 
 }

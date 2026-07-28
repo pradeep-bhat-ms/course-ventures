@@ -1,7 +1,7 @@
-package com.jsp.CourseHub.service;
+package com.example.course_ventures.service;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +15,19 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.course_ventures.dto.CertificateRequestDto;
+import com.example.course_ventures.dto.CertificateResponseDto;
+import com.example.course_ventures.dto.CourseProgressResponseDto;
+import com.example.course_ventures.entity.Certificate;
+import com.example.course_ventures.entity.Course;
+import com.example.course_ventures.entity.MockTest;
+import com.example.course_ventures.entity.MocktestAttempt;
+import com.example.course_ventures.entity.Student;
+import com.example.course_ventures.repository.CertificateRepository;
+import com.example.course_ventures.repository.MockTestAttemptRepository;
+
+import com.example.course_ventures.dto.StudentResponseDto;
+import com.example.course_ventures.dto.CourseResponseDto;
 
 @Service
 public class CertificateService {
@@ -38,8 +51,8 @@ public class CertificateService {
 	MockTestAttemptRepository mockTestAttemptRepository;
 
 	public CertificateResponseDto generateCertificate(CertificateRequestDto requestDto) {
-		Student student = studentService.getStudentById(requestDto.getStudentId());
-		Course course = courseService.getCourseById(requestDto.getCourseId());
+		Student student = studentService.findStudentById(requestDto.getStudentId());
+		Course course = courseService.findCourseById(requestDto.getCourseId());
 
 		CourseProgressResponseDto progress = courseProgressService.getProgress(requestDto.getStudentId(), requestDto.getCourseId());
 
@@ -50,7 +63,7 @@ public class CertificateService {
 		// Verify student has attended all mock tests related to the course
 		List<MockTest> mockTests = mockTestService.getMockTestsByCourseId(requestDto.getCourseId());
 		if (mockTests != null && !mockTests.isEmpty()) {
-			List<MockTestAttempt> attempts = mockTestAttemptRepository.findByStudentId(requestDto.getStudentId());
+			List<MocktestAttempt> attempts = mockTestAttemptRepository.findByStudentId(requestDto.getStudentId());
 			for (MockTest mockTest : mockTests) {
 				boolean attempted = attempts.stream()
 						.anyMatch(a -> a.getMockTest().getId() == mockTest.getId());
@@ -72,7 +85,7 @@ public class CertificateService {
 		certificate.setStudent(student);
 		certificate.setCourse(course);
 		certificate.setCertificateNumber(certificateNumber);
-		certificate.setIssueDate(LocalDate.now());
+		certificate.setIssueDate(LocalDateTime.now());
 		certificate.setCertificateUrl("/certificate/download/" + certificateNumber);
 
 		Certificate savedCertificate = certificateRepository.save(certificate);
@@ -80,10 +93,9 @@ public class CertificateService {
 		return convertToResponseDto(savedCertificate);
 	}
 
-	public CertificateResponseDto getCertificateByNumber(String certificateNumber) {
-		Certificate certificate = certificateRepository.findByCertificateNumber(certificateNumber)
-				.orElseThrow(() -> new RuntimeException("Certificate not found"));
-		return convertToResponseDto(certificate);
+	public Certificate getCertificateEntityByNumber1(String certificateNumber) {
+	    return certificateRepository.findByCertificateNumber(certificateNumber)
+	            .orElseThrow(() -> new RuntimeException("Certificate not found"));
 	}
 
 	public Certificate getCertificateEntityByNumber(String certificateNumber) {
@@ -165,28 +177,28 @@ public class CertificateService {
 		return responseDto;
 	}
 
-	private com.jsp.CourseHub.dto.StudentResponseDto toStudentDto(Student student) {
+	private StudentResponseDto toStudentDto(Student student) {
 		if (student == null) {
 			return null;
 		}
-		com.jsp.CourseHub.dto.StudentResponseDto dto = new com.jsp.CourseHub.dto.StudentResponseDto();
+		StudentResponseDto dto = new StudentResponseDto();
 		dto.setId(student.getId());
 		dto.setName(student.getName());
 		dto.setEmail(student.getEmail());
-		dto.setCollegeName(student.getCollegeName());
+		dto.setName(student.getCollegename());
 		dto.setQualification(student.getQualification());
 		dto.setVerified(student.isVerified());
 		return dto;
 	}
 
-	private com.jsp.CourseHub.dto.CourseResponseDto toCourseDto(Course course) {
+	private CourseResponseDto toCourseDto(Course course) {
 		if (course == null) {
 			return null;
 		}
-		com.jsp.CourseHub.dto.CourseResponseDto dto = new com.jsp.CourseHub.dto.CourseResponseDto();
+		CourseResponseDto dto = new CourseResponseDto();
 		dto.setId(course.getId());
 		dto.setTitle(course.getTitle());
-		dto.setDiscription(course.getDiscription());
+		dto.setDiscription(course.getDescription());
 		dto.setPrice(course.getPrice());
 		dto.setDuration(course.getDuration());
 		dto.setCreatedDate(course.getCreatedDate());

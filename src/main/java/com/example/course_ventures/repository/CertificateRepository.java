@@ -1,10 +1,11 @@
 package com.example.course_ventures.repository;
 
-import java.security.cert.Certificate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.course_ventures.entity.Certificate;
 
 public interface CertificateRepository extends JpaRepository<Certificate, Integer> {
 

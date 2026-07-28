@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.dto.ReviewRequestDto;
-import com.jsp.CourseHub.dto.ReviewResponseDto;
-import com.jsp.CourseHub.service.ReviewService;
+import com.example.course_ventures.dto.ReviewRequestDto;
+import com.example.course_ventures.dto.ReviewResponseDto;
+import com.example.course_ventures.entity.Review;
+import com.example.course_ventures.service.ReviewService;
+
+
 
 
 @RestController
@@ -28,12 +31,12 @@ public class ReviewController {
 	}
 
 	@GetMapping("/course")
-	public List<ReviewResponseDto> getCourseReviews(@RequestParam int courseId) {
+	public List<Review> getCourseReviews(@RequestParam int courseId) {
 		return reviewService.getCourseReviews(courseId);
 	}
 
 	@GetMapping("/student")
-	public List<ReviewResponseDto> getStudentReviews(@RequestParam int studentId) {
+	public List<Review> getStudentReviews(@RequestParam int studentId) {
 		return reviewService.getStudentReviews(studentId);
 	}
 

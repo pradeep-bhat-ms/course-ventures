@@ -60,5 +60,10 @@ import com.example.course_ventures.repository.StudentRepository;
 	        return "Student Deleted Successfully";
 	    }
 
+	    public List<Student> getAllStudents() {
+	        return repo.findAll();
+	    
+		}
+
 	}
 	

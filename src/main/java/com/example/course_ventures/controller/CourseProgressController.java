@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.course_ventures.dto.CourseProgressRequestDto;
 import com.example.course_ventures.dto.CourseProgressResponseDto;
 import com.example.course_ventures.service.CourseProgressService;
 

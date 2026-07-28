@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.course_ventures.entity.Category;
 import com.example.course_ventures.service.CategoryService;
 
-
-
-
 @RestController
 @RequestMapping("/category")
 public class CategoryController {

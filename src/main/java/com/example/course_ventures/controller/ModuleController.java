@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.CourseHub.entity.Module;
-import com.jsp.CourseHub.entity.User;
-import com.jsp.CourseHub.repository.UserRepository;
-import com.jsp.CourseHub.service.ModuleService;
+import com.example.course_ventures.entity.Module;
+import com.example.course_ventures.entity.User;
+import com.example.course_ventures.enums.Role;
+import com.example.course_ventures.repository.UserRepository;
+import com.example.course_ventures.service.ModuleService;
+
 
 
 @RestController
@@ -33,27 +35,27 @@ public class ModuleController {
 
 	@PostMapping("/save")
 	public Module saveModule(@RequestBody Module module, @RequestParam int courseId, Authentication authentication) {
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || (user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER && user.getRole() != com.jsp.CourseHub.enums.Role.ADMIN)) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || (user.getRole() != Role.TRAINER && user.getRole() != Role.ADMIN)) {
 			throw new IllegalStateException("Only trainers can create modules.");
 		}
 		return moduleService.saveModule(module, courseId);
 	}
 
 	@GetMapping("/course/{courseId}")
-	public List<Module> getModulesByCourseId(@PathVariable int courseId) {
+	public List<com.example.course_ventures.entity.Module> getModulesByCourseId(@PathVariable int courseId) {
 		return moduleService.getModulesByCourseId(courseId);
 	}
 
 	@GetMapping("/{id}")
-	public Module getModuleById(@PathVariable int id) {
-		return moduleService.getModuleById(id);
+	public com.example.course_ventures.entity.Module getModuleById(@PathVariable int id) {
+		return moduleService.findModuleById(id);
 	}
 
 	@PutMapping("/update/{id}")
 	public Module updateModule(@PathVariable int id, @RequestBody Module moduleDetails, Authentication authentication) {
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || (user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER && user.getRole() != com.jsp.CourseHub.enums.Role.ADMIN)) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || (user.getRole() !=Role.TRAINER && user.getRole() !=Role.ADMIN)) {
 			throw new IllegalStateException("Only trainers can update modules.");
 		}
 		return moduleService.updateModule(id, moduleDetails);
@@ -61,8 +63,8 @@ public class ModuleController {
 
 	@DeleteMapping("/delete/{id}")
 	public String deleteModule(@PathVariable int id, Authentication authentication) {
-		User user = userRepository.findByEmail(authentication.getName());
-		if (user == null || (user.getRole() != com.jsp.CourseHub.enums.Role.TRAINER && user.getRole() != com.jsp.CourseHub.enums.Role.ADMIN)) {
+		User user = userRepository.findByemail(authentication.getName());
+		if (user == null || (user.getRole() != Role.TRAINER && user.getRole() != Role.ADMIN)) {
 			throw new IllegalStateException("Only trainers can delete modules.");
 		}
 		moduleService.deleteModule(id);

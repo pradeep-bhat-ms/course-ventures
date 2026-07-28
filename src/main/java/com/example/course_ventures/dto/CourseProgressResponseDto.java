@@ -2,7 +2,6 @@ package com.example.course_ventures.dto;
 
 import java.time.LocalDateTime;
 
-import com.jsp.CourseHub.dto.StudentResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
