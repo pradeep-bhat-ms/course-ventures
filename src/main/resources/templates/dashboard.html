@@ -8,11 +8,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
         .progress-bar-bg { background: rgba(255, 255, 255, 0.08); height: 10px; border-radius: 6px; overflow: hidden; }
         .progress-bar-fill { background: var(--accent-gradient); height: 100%; transition: var(--transition); }
-        .dark-select { background-color: var(--bg-dark) !important; color: var(--text-primary) !important; }
+        .dark-select { background-color: #0d1322 !important; color: var(--text-primary) !important; }
     </style>
 </head>
 <body>
@@ -33,7 +33,7 @@
         <div class="dashboard-grid">
             <div class="sidebar-menu glass-panel" style="padding: 20px; height: fit-content;">
                 <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
-                    <i class="bi bi-grid-fill text-primary me-1"></i> Menu
+                    <i class="bi bi-grid-fill text-primary me-1"></i> Student Menu
                 </h3>
                 <div id="btn-enrolled" class="menu-item active" onclick="switchPane('enrolled')"><i class="bi bi-journal-check me-2"></i> My Courses</div>
                 <div id="btn-content" class="menu-item" onclick="switchPane('content')"><i class="bi bi-play-btn me-2"></i> Course Content</div>
@@ -247,7 +247,7 @@
             const certResponse = await fetch(`/certificate/student?studentId=${studentId}`);
             const certificates = await certResponse.json();
             document.getElementById('certificates-list').innerHTML = certificates.map(c => `
-                <div style="padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;">
+                <div style="padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <div style="font-weight: 700;">${c.course.title}</div>
                         <div style="color: var(--text-secondary); font-size: 13px;">ID: ${c.certificateNumber}</div>

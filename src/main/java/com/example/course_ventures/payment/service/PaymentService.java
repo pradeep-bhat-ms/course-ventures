@@ -3,6 +3,7 @@ package com.example.course_ventures.payment.service;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.example.course_ventures.entity.Course;
 import com.example.course_ventures.entity.Student;
@@ -16,6 +17,7 @@ import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.Utils;
 
+@Service
 public class PaymentService {
 
 	@Autowired

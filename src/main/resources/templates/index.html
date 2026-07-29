@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
     <header class="glass-header">
@@ -36,16 +36,16 @@
         <!-- Hero Section -->
         <section class="hero-section">
             <h1 class="hero-title">Level Up Your Engineering Skills</h1>
-            <p class="hero-subtitle">Learn industry-ready developer skills through interactive courses, real-world modules, and mock exams.</p>
+            <p class="hero-subtitle">Learn industry-ready software skills through interactive courses, hands-on modules, and mock exams.</p>
             
-            <div style="max-width: 500px; margin: 30px auto 0; position: relative;">
-                <input type="text" id="search-input" class="form-control" placeholder="Search courses by title or keyword..." style="padding-left: 45px; border-radius: 30px; background: rgba(255,255,255,0.06);" onkeyup="filterCourses()">
-                <i class="bi bi-search" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+            <div style="max-width: 520px; margin: 32px auto 0; position: relative;">
+                <input type="text" id="search-input" class="form-control" placeholder="Search courses by title or keyword..." style="padding-left: 48px; border-radius: 30px;" onkeyup="filterCourses()">
+                <i class="bi bi-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
             </div>
         </section>
 
         <!-- Category Filters -->
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;">
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;">
             <button class="btn btn-secondary filter-btn active" onclick="filterCategory('all', this)">All Courses</button>
             <button th:each="cat : ${categories}" 
                     class="btn btn-secondary filter-btn" 
@@ -62,7 +62,7 @@
                     <p class="course-desc" th:text="${course.discription}">Course Description</p>
                     <div class="course-footer">
                         <span class="course-price" th:text="'₹' + ${#numbers.formatDecimal(course.price, 0, 0)}">₹999</span>
-                        <span class="course-trainer"><i class="bi bi-person-circle"></i> <span th:text="${course.trainer != null ? course.trainer.name : 'Instructor'}">Instructor</span></span>
+                        <span class="course-trainer"><i class="bi bi-person-circle text-primary"></i> <span th:text="${course.trainer != null ? course.trainer.name : 'Instructor'}">Instructor</span></span>
                     </div>
                 </div>
             </div>

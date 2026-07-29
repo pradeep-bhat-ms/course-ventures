@@ -7,9 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.course_ventures.entity.Student;
 import com.example.course_ventures.entity.User;
-import com.example.course_ventures.enums.Role;
 import com.example.course_ventures.repository.StudentRepository;
 import com.example.course_ventures.repository.UserRepository;
 import com.example.course_ventures.util.OtpUtil;

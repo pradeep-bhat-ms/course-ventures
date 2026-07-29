@@ -36,7 +36,6 @@ public class User {
 	private String email;
 	
 	@NotBlank(message = "Password is required")
-	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,20}$",message = "Password must be 8-20 characters long and include uppercase, lowercase, digit, and special character.")
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
