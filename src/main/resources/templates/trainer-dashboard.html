@@ -143,34 +143,100 @@
                     </div>
                 </div>
 
-                <!-- Pane: Add Module -->
-                <div id="pane-add-module" class="tab-pane">
-                    <div class="glass-panel" style="padding: 36px;">
-                        <div class="pane-header">
-                            <i class="bi bi-folder-plus"></i>
-                            <h2>Add Course Module</h2>
-                        </div>
-                        <form onsubmit="submitModule(event)">
-                            <div class="form-group">
-                                <label class="form-label">Target Course</label>
-                                <select id="module-course-id" class="form-control dark-select" required>
-                                    <option value="" disabled selected>Select Course</option>
-                                    <option th:each="c : ${courses}" th:value="${c.id}" th:text="${c.title}">Course</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Module Title</label>
-                                <input type="text" id="module-title" class="form-control" placeholder="e.g. Module 1: Core Fundamentals" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Module Order Index</label>
-                                <input type="number" id="module-order" class="form-control" placeholder="0" required min="0">
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="padding: 12px 30px;"><i class="bi bi-plus-lg me-1"></i> Add Module</button>
-                        </form>
-                    </div>
-                </div>
 
+ <!-- Pane: Add Module -->
+<div id="pane-add-module" class="tab-pane">
+    <div class="glass-panel" style="padding: 36px;">
+        <div class="pane-header">
+            <i class="bi bi-folder-plus"></i>
+            <h2>Add Course Module</h2>
+        </div>
+
+        <form onsubmit="submitModule(event)">
+
+            <div class="form-group">
+                <label class="form-label">Target Course</label>
+                <select id="module-course-id"
+                        class="form-control dark-select"
+                        required>
+                    <option value="" disabled selected>Select Course</option>
+
+                    <option th:each="c : ${courses}"
+                            th:value="${c.id}"
+                            th:text="${c.title}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Module Title</label>
+                <input type="text"
+                       id="module-title"
+                       class="form-control"
+                       placeholder="Module 1 : Introduction"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Module Description</label>
+                <textarea id="module-description"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Enter module description..."
+                          required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Module Order Index</label>
+                <input type="number"
+                       id="module-order"
+                       class="form-control"
+                       min="0"
+                       required>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="padding:12px 30px;">
+                <i class="bi bi-plus-lg me-1"></i>
+                Add Module
+            </button>
+
+        </form>
+    </div>
+</div>
+
+            <!-- Module Title -->
+            <div class="form-group">
+                <label class="form-label">Module Title</label>
+                <input type="text"
+                       id="module-title"
+                       class="form-control"
+                       placeholder="e.g. Module 1: Core Fundamentals"
+                       required>
+            </div>
+
+            <!-- Module Order -->
+            <div class="form-group">
+                <label class="form-label">Module Order Index</label>
+                <input type="number"
+                       id="module-order"
+                       class="form-control"
+                       placeholder="0"
+                       min="0"
+                       required>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="padding:12px 30px;">
+                <i class="bi bi-plus-lg me-1"></i>
+                Add Module
+            </button>
+
+        </form>
+    </div>
+</div>
                 <!-- Pane: Add Lesson -->
                 <div id="pane-add-lesson" class="tab-pane">
                     <div class="glass-panel" style="padding: 36px;">
@@ -343,8 +409,7 @@
             event.preventDefault();
             const data = {
                 title: document.getElementById('course-title').value,
-                discription: document.getElementById('course-desc').value,
-                price: parseFloat(document.getElementById('course-price').value),
+                description: document.getElementById('course-desc').value,                price: parseFloat(document.getElementById('course-price').value),
                 duration: parseInt(document.getElementById('course-duration').value),
                 category: { id: parseInt(document.getElementById('course-category').value) },
                 trainer: { id: currentTrainerId }
@@ -359,29 +424,78 @@
                 else { showMessage("Failed to save course.", true); }
             } catch (e) { showMessage("Network error saving course.", true); }
         }
-
         async function submitModule(event) {
+
             event.preventDefault();
-            const courseId = parseInt(document.getElementById('module-course-id').value);
+
+            const courseId = document.getElementById("module-course-id").value;
+
+            if (!courseId) {
+                showMessage("Please select a course", true);
+                return;
+            }
+
             const data = {
-                title: document.getElementById('module-title').value,
-                orderIndex: parseInt(document.getElementById('module-order').value)
+
+                moduleTitle: document.getElementById("module-title").value,
+
+                moduleDescription: document.getElementById("module-description").value,
+
+                orderIndex: parseInt(document.getElementById("module-order").value)
+
             };
+
             try {
-                const response = await fetch(`/module/add?courseId=${courseId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+
+                const response = await fetch(`/module/save?courseId=${courseId}`, {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
                     body: JSON.stringify(data)
+
                 });
-                if (response.ok) { showMessage("Module added successfully!"); event.target.reset(); }
-            } catch (e) { showMessage("Network error.", true); }
+
+                if (response.ok) {
+
+                    showMessage("Module added successfully!");
+
+                    event.target.reset();
+
+                } else {
+
+                    const error = await response.text();
+
+                    showMessage(error, true);
+
+                }
+
+            } catch (e) {
+
+                console.error(e);
+
+                showMessage("Network Error", true);
+
+            }
+
         }
 
         async function loadModulesForLesson(courseId) {
+
             const response = await fetch(`/module/course/${courseId}`);
+
             const modules = await response.json();
-            const select = document.getElementById('lesson-module-id');
-            select.innerHTML = '<option value="" disabled selected>Select Module</option>' + modules.map(m => `<option value="${m.id}">${m.title}</option>`).join('');
+
+            const select = document.getElementById("lesson-module-id");
+
+            select.innerHTML =
+                '<option value="" disabled selected>Select Module</option>' +
+                modules.map(m =>
+                    `<option value="${m.id}">${m.moduleTitle}</option>`
+                ).join("");
         }
 
         async function submitLesson(event) {
@@ -393,16 +507,7 @@
                 durationMinutes: parseInt(document.getElementById('lesson-duration').value),
                 contentUrl: document.getElementById('lesson-url').value,
                 orderIndex: parseInt(document.getElementById('lesson-order').value)
-            };
-            try {
-                const response = await fetch(`/lesson/add?moduleId=${moduleId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                if (response.ok) { showMessage("Lesson added successfully!"); event.target.reset(); }
-            } catch (e) { showMessage("Network error.", true); }
-        }
+            }
 
         async function submitMock(event) {
             event.preventDefault();
@@ -412,7 +517,7 @@
                 duration: parseInt(document.getElementById('mock-duration').value)
             };
             try {
-                const response = await fetch(`/mock-test/add?courseId=${courseId}`, {
+                const response = await fetch(`/mock-test/save?courseId=${courseId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -440,7 +545,7 @@
                 correctOption: document.getElementById('q-correct').value
             };
             try {
-                const response = await fetch(`/question/add?mockTestId=${mockId}`, {
+                const response = await fetch(`/question/save?mockTestId=${mockId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -460,6 +565,7 @@
                 });
                 if (response.ok) { showMessage("Category created successfully!"); event.target.reset(); }
             } catch (e) { showMessage("Network error.", true); }
+        }
         }
     </script>
 </body>

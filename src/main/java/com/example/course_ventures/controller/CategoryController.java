@@ -21,7 +21,7 @@ public class CategoryController {
 	@Autowired
 	CategoryService categoryService;
 
-	@PostMapping("/save")
+	@PostMapping("/add")
 	public Category saveCategory(@RequestBody Category category) {
 		 System.out.println(category.getCategoryName());
 		    System.out.println(category.getCategoryDescription());

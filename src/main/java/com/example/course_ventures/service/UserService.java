@@ -31,15 +31,29 @@ public class UserService {
 	EmailSender sender;
 	
 	// Register User
-	public User saveUser(User u)
-	{
-		String otp=util.getOtp();
-		u.setOtp(otp);
-		u.setPassword(encoder.encode(u.getPassword()));
-		u.setVerified(false);
-		User save=repo.save(u);
-		sender.sendMail(u.getEmail(),otp );
-		return save;	
+	public User saveUser(User u) {
+
+	    String otp = util.getOtp();
+
+	    u.setOtp(otp);
+	    u.setPassword(encoder.encode(u.getPassword()));
+	    u.setVerified(false);
+	    User save = repo.save(u);
+
+	    System.out.println("================================");
+	    System.out.println("Generated OTP : " + otp);
+	    System.out.println("Email : " + u.getEmail());
+	    System.out.println("================================");
+
+	    try {
+	        sender.sendMail(u.getEmail(), otp);
+	        System.out.println("OTP sent successfully to " + u.getEmail());
+	    } catch (Exception e) {
+	        System.out.println("Failed to send OTP");
+	        e.printStackTrace();
+	    }
+
+	    return save;
 	}
 	
     // verify otp

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.course_ventures.entity.Category;
 import com.example.course_ventures.entity.Course;
 import com.example.course_ventures.entity.Trainer;
 import com.example.course_ventures.exception.CourseNotFound;
@@ -22,14 +23,15 @@ public class CourseService {
 	@Autowired
 	private TrainerService trainerService;;
 	
-	public Course saveCourse(Course c, int trainerId, int categoryId) {
-		com.example.course_ventures.entity.Category category=categoryService.findCategoryById(categoryId);
-		Trainer trainer=trainerService.findTrainerById(trainerId);
-		
-		c.setCategory(category);
-		c.setTrainer(trainer);
-     	return	courseRepository.save(c);
-		
+	public Course saveCourse(Course c, int categoryId, int trainerId) {
+
+	    Category category = categoryService.findCategoryById(categoryId);
+	    Trainer trainer = trainerService.findTrainerById(trainerId);
+
+	    c.setCategory(category);
+	    c.setTrainer(trainer);
+
+	    return courseRepository.save(c);
 	}
 	
 	// find by id

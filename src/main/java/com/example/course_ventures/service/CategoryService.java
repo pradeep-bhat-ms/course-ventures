@@ -48,10 +48,9 @@ public class CategoryService {
         repo.delete(category);
         return "Category Deleted Successfully";
     }
-
-	public List<Category> getAllCategories() {
-		// TODO Auto-generated method stub
-		return null;
+    public List<Category> getAllCategories() {
+        return repo.findAll();
+    
 	}
 
 }

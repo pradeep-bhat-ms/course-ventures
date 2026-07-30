@@ -34,19 +34,24 @@ public class CourseController {
 
 	@Autowired
 	UserRepository userRepository;
-
 	@PostMapping("/save")
 	public Course saveCourse(
-			@RequestBody Course course,
-			@RequestParam int categoryId,
-			Authentication authentication) {
+	        @RequestBody Course course,
+	        Authentication authentication) {
+		System.out.println("Category from request = " + course.getCategory());
+		System.out.println("Category ID = " + course.getCategory().getId());
 
-		User user = userRepository.findByemail(authentication.getName());
-		if (user == null || user.getRole() != Role.TRAINER) {
-			throw new IllegalStateException("Only trainers can create courses.");
-		}
+	    User user = userRepository.findByemail(authentication.getName());
 
-		return courseService.saveCourse(course, categoryId, user.getId());
+	    if (user == null || user.getRole() != Role.TRAINER) {
+	        throw new IllegalStateException("Only trainers can create courses.");
+	    }
+
+	    return courseService.saveCourse(
+	            course,
+	            course.getCategory().getId(),
+	            user.getId()
+	    );
 	}
 
 	@GetMapping("/fetch")

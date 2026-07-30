@@ -103,9 +103,23 @@ public class SecurityConfig {
 	}
 
 	private String getTargetUrl(Authentication authentication) {
-		boolean adminOrTrainer = authentication.getAuthorities().stream()
-				.anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()) || "ROLE_TRAINER".equals(a.getAuthority()));
-		return adminOrTrainer ? "/trainer/dashboard" : "/";
+
+	    if (authentication.getAuthorities().stream()
+	            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+	        return "/admin/dashboard";
+	    }
+
+	    if (authentication.getAuthorities().stream()
+	            .anyMatch(a -> a.getAuthority().equals("ROLE_TRAINER"))) {
+	        return "/trainer/dashboard";
+	    }
+
+	    if (authentication.getAuthorities().stream()
+	            .anyMatch(a -> a.getAuthority().equals("ROLE_STUDENT"))) {
+	        return "/student/dashboard";
+	    }
+
+	    return "/";
 	}
 }
 

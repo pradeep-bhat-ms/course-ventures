@@ -4,20 +4,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
 @Service
 public class EmailSender {
 
-	@Autowired
-	JavaMailSender javaMailSender;
-	
-	public void sendMail(String toEmail,String otp)
-	{
-		SimpleMailMessage mailMessage=new SimpleMailMessage();
-		mailMessage.setFrom("pradeephsg@gmail.com");
-		mailMessage.setTo(toEmail);
-		mailMessage.setSubject("CourseHub Email Verification OTP");
-		mailMessage.setText("Your CourseHub email verification OTP is: " + otp + "\n\nThis code is required before you can log in.");
-		javaMailSender.send(mailMessage);	
-	}
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    public void sendMail(String toEmail, String otp) {
+
+        try {
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+            mailMessage.setFrom("pradeephsgr@gmail.com");
+            mailMessage.setTo(toEmail);
+            mailMessage.setSubject("CourseHub Email Verification OTP");
+            mailMessage.setText("Your OTP is : " + otp);
+
+            javaMailSender.send(mailMessage);
+
+            System.out.println("==================================");
+            System.out.println("EMAIL SENT SUCCESSFULLY");
+            System.out.println("To : " + toEmail);
+            System.out.println("OTP : " + otp);
+            System.out.println("==================================");
+
+        } catch (Exception e) {
+
+            System.out.println("==================================");
+            System.out.println("EMAIL SENDING FAILED");
+            e.printStackTrace();
+            System.out.println("==================================");
+        }
+    }
 }

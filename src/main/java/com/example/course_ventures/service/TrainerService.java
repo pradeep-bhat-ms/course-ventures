@@ -44,7 +44,7 @@ import com.example.course_ventures.repository.TrainerRepository;
 
 	        dbTrainer.setName(trainer.getName());
 	        dbTrainer.setEmail(trainer.getEmail());
-	        dbTrainer.setSpecilization(trainer.getSpecilization());
+	        dbTrainer.setSpecialization(trainer.getSpecialization());
 	        dbTrainer.setExperience(trainer.getExperience());
 
 	        return repo.save(dbTrainer);

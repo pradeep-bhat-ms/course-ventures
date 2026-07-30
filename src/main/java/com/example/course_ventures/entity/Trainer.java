@@ -18,7 +18,7 @@ import lombok.Setter;
 public class Trainer extends User {
 
 	@NotBlank(message="Specilization should not be empty")
-	private String specilization;
+	private String specialization;
 	
 	@Min(value=0, message="Experience should be a positive number")
 	private int experience;
