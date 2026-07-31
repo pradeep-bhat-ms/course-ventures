@@ -1,6 +1,8 @@
 package com.example.course_ventures.entity;
 
 import com.example.course_ventures.enums.Role;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,6 +38,7 @@ public class User {
 	private String email;
 	
 	@NotBlank(message = "Password is required")
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
