@@ -3,6 +3,9 @@ package com.example.course_ventures.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +26,7 @@ public class Module {
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private int id;
 	    
+	    @JsonIgnore
 	    @ManyToOne
 	    private Course course; // relation ship
 	    
@@ -36,5 +40,9 @@ public class Module {
 	    
 	    @OneToMany(mappedBy = "module", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
 		@OrderBy("orderIndex ASC")
-	    private List<Lessons> lessons = new ArrayList();
+	    private List<Lessons> lessons = new ArrayList<>();
+	    
+	    @OneToMany(mappedBy = "module",cascade = CascadeType.ALL,orphanRemoval = true)
+	    @JsonIgnore
+	    private List<ModuleProgress> moduleProgressList = new ArrayList<>();
 }

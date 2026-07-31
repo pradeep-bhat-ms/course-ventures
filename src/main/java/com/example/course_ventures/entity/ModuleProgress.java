@@ -2,6 +2,8 @@ package com.example.course_ventures.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,20 +19,20 @@ import lombok.Setter;
 @Entity
 public class ModuleProgress {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne
-	private Student student;
+    @ManyToOne
+    private Student student;
 
-	@ManyToOne
-	private Module module;
+    @ManyToOne
+    @JsonIgnore
+    private Module module;
 
-	private int completedLessons;
-	private int totalLessons;
-	private boolean completed;
-	private LocalDateTime lastAccessed = LocalDateTime.now();
-	private LocalDateTime completedAt;
-
+    private int completedLessons;
+    private int totalLessons;
+    private boolean completed;
+    private LocalDateTime lastAccessed = LocalDateTime.now();
+    private LocalDateTime completedAt;
 }

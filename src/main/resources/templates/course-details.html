@@ -11,7 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
-        .meta-group {
+        .meta-group {	
             display: flex;
             gap: 32px;
             border-top: 1px solid var(--border-color);
@@ -65,7 +65,7 @@
                 <div class="glass-panel" style="padding: 40px;">
                     <span class="course-category" th:text="${course.category != null ? course.category.categoryName : 'General'}">Category</span>
                     <h1 style="font-size: 36px; margin-top: 10px; margin-bottom: 20px;" th:text="${course.title}">Course Title</h1>
-                    <p style="color: var(--text-secondary); line-height: 1.7; font-size: 16px; margin-bottom: 0;" th:text="${course.discription}">
+                    <p style="color: var(--text-secondary); line-height: 1.7; font-size: 16px; margin-bottom: 0;"  th:text="${course.description}">
                         Detailed description of the course.
                     </p>
 
@@ -102,8 +102,8 @@
                     <div class="mock-test-list">
                         <div th:each="mock : ${mockTests}" class="mock-test-item glass-panel">
                             <div class="mock-test-info">
-                                <h4 th:text="${mock.title}">Mock Test Title</h4>
-                                <span><i class="bi bi-stopwatch me-1"></i><span th:text="${mock.duration} + ' Mins'">30 Mins</span> | <i class="bi bi-card-list me-1"></i><span th:text="(${mock.questions != null ? mock.questions.size() : 0}) + ' Questions'">20 Questions</span></span>
+                               <h4 th:text="${mock.testname}">Mock Test Title</h4>
+                                <span><i class="bi bi-stopwatch me-1"></i><span th:text="${mock.testDuration} + ' Mins'">30 Mins</span> | <i class="bi bi-card-list me-1"></i><span th:text="(${mock.questions != null ? mock.questions.size() : 0}) + ' Questions'">20 Questions</span></span>
                             </div>
                             <div>
                                 <a th:if="${isPurchased}" th:href="@{/mock-test/{id}/take(id=${mock.id})}" class="btn btn-primary"><i class="bi bi-play-circle-fill me-1"></i> Start Test</a>
@@ -219,15 +219,15 @@
                     return `
                         <div class="glass-panel" style="padding: 25px; margin-bottom: 20px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">${m.title}</h3>
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">${m.moduleTitle}</h3>
                                 <span style="color: var(--text-secondary); font-size: 13px;">${completedLessons}/${totalLessons} lessons (${progressPercent}%)</span>
                             </div>
                             <div style="background: rgba(255,255,255,0.06); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 20px;">
                                 <div style="background: var(--accent-gradient); height: 100%; width: ${progressPercent}%"></div>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 10px;">
-                                ${lessons.map(l => {
-                                    const isCompleted = completedLessons > l.orderIndex;
+                                ${lessons.map((l, lessonIdx) => {
+                                    const isCompleted = completedLessons > lessonIdx;
                                     return `
                                         <div style="padding: 14px 18px; border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; ${isCompleted ? 'background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25);' : 'background: rgba(255,255,255,0.02);'}">
                                             <div>
@@ -237,7 +237,7 @@
                                             <div style="display: flex; gap: 8px;">
                                                 <a href="${l.contentUrl}" target="_blank" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Open</a>
                                                 ${isStudentViewer ? `
-                                                    <button class="btn ${isCompleted ? 'btn-success' : 'btn-secondary'}" style="padding: 6px 14px; font-size: 13px;" onclick="markLessonComplete(${m.id}, ${l.orderIndex})">
+                                                    <button class="btn ${isCompleted ? 'btn-success' : 'btn-secondary'}" style="padding: 6px 14px; font-size: 13px;" onclick="markLessonComplete(${m.id}, ${lessonIdx})">
                                                         ${isCompleted ? '✓ Done' : 'Mark Complete'}
                                                     </button>
                                                 ` : ''}
@@ -260,6 +260,15 @@
                 if (response.ok) {
                     showMessage("Lesson updated!");
                     loadCourseModules(currentCourseId);
+
+                    // Roll the module-level update up into overall course progress
+                    const courseProgressResponse = await fetch(`/module-progress/course-progress?studentId=${currentUserId}&courseId=${currentCourseId}`);
+                    const courseProgressPercent = await courseProgressResponse.json();
+                    await fetch(`/course-progress/update`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ studentId: currentUserId, courseId: currentCourseId, progressPercentage: courseProgressPercent })
+                    });
                 }
             } catch (err) { showMessage("Network error.", true); }
         }

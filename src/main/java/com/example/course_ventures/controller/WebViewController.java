@@ -53,6 +53,8 @@ public class WebViewController {
 		}
 		return userRepository.findByemail(auth.getName());
 	}
+	
+	
 
 	@GetMapping("/login")
 	public String loginPage(Model model, @RequestParam(value = "error", required = false) String error,
@@ -171,6 +173,7 @@ public class WebViewController {
 
 		model.addAttribute("user", user);
 		model.addAttribute("mockTest", mockTest);
+		model.addAttribute("questions", mockTest.getQuestions());
 		return "take-mock";
 	}
 
@@ -207,6 +210,5 @@ public class WebViewController {
 		model.addAttribute("user", user);
 		return "student-dashboard";
 	}
+	
 }
-
-

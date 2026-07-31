@@ -20,7 +20,7 @@ import com.example.course_ventures.response.ResponseStructure;
 import com.razorpay.Order;
 
 @RestController
-@RequestMapping("/payments")
+@RequestMapping("/payment")
 public class PaymentController {
 
     @Autowired

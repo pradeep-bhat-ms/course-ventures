@@ -66,8 +66,23 @@ public class SecurityConfig {
 				// Catch-all: any other /course/** or /mock-test/** endpoint (e.g. update,
 				// delete, add-question) is a trainer-management action. Declared last among
 				// role rules so it never shadows the narrower student-facing rules above.
-				.requestMatchers("/course/**", "/mock-test/**").hasAnyRole("TRAINER", "ADMIN")
+				// Students can view courses
+				.requestMatchers(HttpMethod.GET, "/course/**")
+				.hasAnyRole("STUDENT", "TRAINER", "ADMIN")
 
+				// Students can take mock tests
+				.requestMatchers(HttpMethod.GET, "/mock-test/**")
+				.hasAnyRole("STUDENT", "TRAINER", "ADMIN")
+
+				// Only trainers/admins can modify
+				.requestMatchers(HttpMethod.POST, "/course/**", "/mock-test/**")
+				.hasAnyRole("TRAINER", "ADMIN")
+
+				.requestMatchers(HttpMethod.PUT, "/course/**", "/mock-test/**")
+				.hasAnyRole("TRAINER", "ADMIN")
+
+				.requestMatchers(HttpMethod.DELETE, "/course/**", "/mock-test/**")
+				.hasAnyRole("TRAINER", "ADMIN")
 				// All other requests require authentication
 				.anyRequest().authenticated()
 			)

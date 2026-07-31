@@ -22,6 +22,12 @@ public class MockTestService {
 	    @Autowired
 	    private QuestionRepository questionRepository;
 
+	    @Autowired
+	    private StudentService studentService;
+
+	    @Autowired
+	    private com.example.course_ventures.repository.MockTestAttemptRepository mockTestAttemptRepository;
+
 	    public MockTest saveMockTest(MockTest test, int courseId) {
 
 	        Course course = courseService.findCourseById(courseId);
@@ -76,5 +82,30 @@ public class MockTestService {
 	        MockTest mockTest = findMockTestById(id);
 
 	        repo.delete(mockTest);
+	    }
+
+	    public com.example.course_ventures.entity.MocktestAttempt submitAttempt(
+	            int studentId, int mockTestId, java.util.Map<String, String> answers) {
+
+	        MockTest mockTest = findMockTestById(mockTestId);
+	        com.example.course_ventures.entity.Student student = studentService.findStudentById(studentId);
+
+	        List<Question> questions = mockTest.getQuestions();
+	        int score = 0;
+	        for (Question q : questions) {
+	            String submitted = answers.get(String.valueOf(q.getId()));
+	            if (submitted != null && submitted.equalsIgnoreCase(q.getCorrectOption())) {
+	                score++;
+	            }
+	        }
+
+	        com.example.course_ventures.entity.MocktestAttempt attempt =
+	                new com.example.course_ventures.entity.MocktestAttempt();
+	        attempt.setStudent(student);
+	        attempt.setMockTest(mockTest);
+	        attempt.setScore(score);
+	        attempt.setTotalQuestions(questions.size());
+
+	        return mockTestAttemptRepository.save(attempt);
 	    }
 }

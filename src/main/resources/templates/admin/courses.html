@@ -29,7 +29,7 @@
                         <td style="color: var(--text-secondary); font-weight: 600;" th:text="'#' + ${course.id}">#1</td>
                         <td>
                             <div style="font-weight: 700; font-size: 16px;" th:text="${course.title}">Java Programming</div>
-                            <div style="color: var(--text-secondary); font-size: 13px; max-width: 320px;" th:text="${course.discription}">Learn Java from scratch</div>
+                            <div style="color: var(--text-secondary); font-size: 13px; max-width: 320px;"th:text="${course.description}">Learn Java from scratch</div>
                         </td>
                         <td><span class="course-price" style="font-size: 18px;" th:text="'₹' + ${course.price}">₹9999</span></td>
                         <td><span class="badge-custom badge-info"><i class="bi bi-clock-history"></i> <span th:text="${course.duration} + ' Days'">30 Days</span></span></td>

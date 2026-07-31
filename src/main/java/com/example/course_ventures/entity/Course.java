@@ -3,6 +3,7 @@ package com.example.course_ventures.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.course_ventures.payment.entity.Payment;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -65,6 +66,12 @@ public class Course  {
 	@com.fasterxml.jackson.annotation.JsonIgnore
 	private List<Review> reviews;
 
+	@OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
+	@com.fasterxml.jackson.annotation.JsonIgnore
+	private List<Module> modules;
 	
+	@OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
+	@com.fasterxml.jackson.annotation.JsonIgnore
+	private List<Payment> payments;
 	
 }

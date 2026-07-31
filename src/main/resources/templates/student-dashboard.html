@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - CourseHub</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header class="glass-header">
+        <div class="container nav-wrapper">
+            <a href="/" class="brand-logo">CourseHub</a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <span style="color: var(--text-secondary); font-weight: 500;">
+                    Dashboard: <span th:text="${user.name}">User Name</span>
+                </span>
+                <a href="/logout" class="btn btn-danger btn-sm" style="padding: 6px 12px; font-size: 13px;">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dashboard-grid">
+            <!-- Sidebar Panel Navigation -->
+            <div class="sidebar-menu glass-panel" style="padding: 20px; height: fit-content;">
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--text-primary);">Student Dashboard</h3>
+                
+                <div id="btn-enrolled" class="menu-item active" onclick="switchPane('enrolled')">My Enrolled Courses</div>
+                <div id="btn-content" class="menu-item" onclick="switchPane('content')">Course Content</div>
+                <div id="btn-progress" class="menu-item" onclick="switchPane('progress')">Course Progress</div>
+                <div id="btn-certificates" class="menu-item" onclick="switchPane('certificates')">My Certificates</div>
+                <div id="btn-reviews" class="menu-item" onclick="switchPane('reviews')">My Reviews</div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="dashboard-content">
+                <div id="msg-box" class="alert" style="display: none;"></div>
+
+                <!-- Pane: Enrolled Courses -->
+                <div id="pane-enrolled" class="tab-pane active">
+                    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">My Enrolled Courses</h2>
+                    
+                    <div id="enrolled-courses-container" class="course-grid">
+                        <!-- Courses will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Pane: Course Content -->
+                <div id="pane-content" class="tab-pane">
+                    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">Course Content</h2>
+                    
+                    <div class="glass-panel" style="padding: 30px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">Select Course</h3>
+                        <select id="content-course" class="form-control" required style="background-color: #111827;" onchange="loadCourseModules(this.value)">
+                            <option value="" disabled selected>Select Course</option>
+                        </select>
+                    </div>
+
+                    <div id="course-modules-container">
+                        <div class="glass-panel" style="padding: 30px; text-align: center; color: var(--text-secondary);">
+                            Select a course to view its modules and lessons.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane: Course Progress -->
+                <div id="pane-progress" class="tab-pane">
+                    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">Course Progress</h2>
+                    
+                    <div class="glass-panel" style="padding: 30px; margin-bottom: 20px; color: var(--text-secondary); font-size: 14px;">
+                        Progress is calculated automatically as you complete lessons/modules inside "My Learning" &mdash; it cannot be edited manually.
+                        <select id="progress-course" style="display:none;"></select>
+                    </div>
+
+                    <div class="glass-panel" style="padding: 30px;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">All Course Progress</h3>
+                        <div id="progress-list"></div>
+                    </div>
+                </div>
+
+                <!-- Pane: Certificates -->
+                <div id="pane-certificates" class="tab-pane">
+                    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">My Certificates</h2>
+                    
+                    <div class="glass-panel" style="padding: 30px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">Generate Certificate</h3>
+                        <form id="form-certificate" onsubmit="generateCertificate(event)">
+                            <div class="form-group">
+                                <label for="cert-course" class="form-label">Select Completed Course</label>
+                                <select id="cert-course" name="courseId" class="form-control" required style="background-color: #111827;">
+                                    <option value="" disabled selected>Select Course</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 12px 30px;">Generate Certificate</button>
+                        </form>
+                    </div>
+
+                    <div class="glass-panel" style="padding: 30px;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">My Certificates</h3>
+                        <div id="certificates-list"></div>
+                    </div>
+                </div>
+
+                <!-- Pane: Reviews -->
+                <div id="pane-reviews" class="tab-pane">
+                    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">My Reviews</h2>
+                    
+                    <div class="glass-panel" style="padding: 30px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">Add Review</h3>
+                        <form id="form-review" onsubmit="addReview(event)">
+                            <div class="form-group">
+                                <label for="review-course" class="form-label">Select Course</label>
+                                <select id="review-course" name="courseId" class="form-control" required style="background-color: #111827;">
+                                    <option value="" disabled selected>Select Course</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="review-rating" class="form-label">Rating (1-5 Stars)</label>
+                                <select id="review-rating" name="rating" class="form-control" required style="background-color: #111827;">
+                                    <option value="" disabled selected>Select Rating</option>
+                                    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                                    <option value="4">⭐⭐⭐⭐ (4)</option>
+                                    <option value="3">⭐⭐⭐ (3)</option>
+                                    <option value="2">⭐⭐ (2)</option>
+                                    <option value="1">⭐ (1)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="review-comment" class="form-label">Comment</label>
+                                <textarea id="review-comment" name="comment" class="form-control" rows="4" placeholder="Share your experience..." required style="resize: vertical;"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 12px 30px;">Submit Review</button>
+                        </form>
+                    </div>
+
+                    <div class="glass-panel" style="padding: 30px;">
+                        <h3 style="font-size: 18px; margin-bottom: 15px;">My Reviews</h3>
+                        <div id="reviews-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 CourseHub Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script th:inline="javascript">
+        const studentId = /*[[${user.id}]]*/ 0;
+
+        function switchPane(pane) {
+            const panes = ['enrolled', 'content', 'progress', 'certificates', 'reviews'];
+            panes.forEach(p => {
+                const button = document.getElementById(`btn-${p}`);
+                const tabPane = document.getElementById(`pane-${p}`);
+                if (!button || !tabPane) return;
+                if (p === pane) {
+                    button.classList.add('active');
+                    tabPane.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                    tabPane.classList.remove('active');
+                }
+            });
+            document.getElementById('msg-box').style.display = 'none';
+
+            // Load data based on pane
+            if (pane === 'enrolled') loadEnrolledCourses();
+            if (pane === 'content') loadContentData();
+            if (pane === 'progress') loadProgressData();
+            if (pane === 'certificates') loadCertificateData();
+            if (pane === 'reviews') loadReviewData();
+        }
+
+        function showMessage(text, isError = false) {
+            const box = document.getElementById('msg-box');
+            box.textContent = text;
+            box.className = isError ? 'alert alert-error' : 'alert alert-success';
+            box.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function loadEnrolledCourses() {
+            try {
+                const response = await fetch(`/enrollement/student?studentId=${studentId}`);
+                const enrollments = await response.json();
+                const container = document.getElementById('enrolled-courses-container');
+                
+                if (enrollments.length === 0) {
+                    container.innerHTML = '<div class="glass-panel" style="text-align: center; padding: 40px; color: var(--text-secondary);">You have not enrolled in any courses yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = enrollments.map(e => `
+                    <div class="course-card glass-panel">
+                        <div class="course-body">
+                            <h3 class="course-title">${e.course.title}</h3>
+                            <p class="course-desc">${e.course.description}</p>
+                            <div class="course-footer">
+                                <span class="course-price">₹${e.course.price}</span>
+                                <span class="course-trainer">${e.status}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Error loading enrolled courses:', err);
+                document.getElementById('enrolled-courses-container').innerHTML = '<div class="glass-panel" style="text-align: center; padding: 40px; color: var(--text-secondary);">Error loading enrolled courses.</div>';
+            }
+        }
+
+        async function loadContentData() {
+            try {
+                const response = await fetch(`/enrollement/student?studentId=${studentId}`);
+                const enrollments = await response.json();
+                const courseSelect = document.getElementById('content-course');
+                
+                if (enrollments.length === 0) {
+                    courseSelect.innerHTML = '<option value="" disabled selected>No enrolled courses</option>';
+                    return;
+                }
+                
+                courseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>' + 
+                    enrollments.map(e => `<option value="${e.course.id}">${e.course.title}</option>`).join('');
+            } catch (err) {
+                console.error('Error loading content data:', err);
+                document.getElementById('content-course').innerHTML = '<option value="" disabled selected>Error loading courses</option>';
+            }
+        }
+
+        async function loadCourseModules(courseId) {
+            if (!courseId) {
+                document.getElementById('course-modules-container').innerHTML = '<div class="glass-panel" style="padding: 30px; text-align: center; color: var(--text-secondary);">Select a course to view its modules and lessons.</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/module/course/${courseId}`);
+                if (!response.ok) {
+                    let detail = '';
+                    try {
+                        const errBody = await response.clone().json();
+                        detail = errBody.message || JSON.stringify(errBody);
+                    } catch (e) {
+                        detail = await response.text();
+                    }
+                    throw new Error(`Server returned ${response.status}: ${detail}`);
+                }
+                const modules = await response.json();
+                if (!Array.isArray(modules)) {
+                    throw new Error('Expected an array of modules but got: ' + JSON.stringify(modules));
+                }
+                const container = document.getElementById('course-modules-container');
+
+                if (modules.length === 0) {
+                    container.innerHTML = '<div class="glass-panel" style="padding: 30px; text-align: center; color: var(--text-secondary);">No modules found for this course.</div>';
+                    return;
+                }
+
+                container.innerHTML = await Promise.all(modules.map(async (m) => {
+                    const lessonsResponse = await fetch(`/lesson/module/${m.id}`);
+                    const lessons = await lessonsResponse.json();
+                    const moduleProgressResponse = await fetch(`/module-progress/module/${m.id}`);
+                    const moduleProgressList = await moduleProgressResponse.json();
+                    const studentModuleProgress = moduleProgressList.find(mp => mp.student.id === studentId);
+                    
+                    const totalLessons = lessons.length;
+                    const rawCompletedLessons = studentModuleProgress ? studentModuleProgress.completedLessons : 0;
+                    const completedLessons = Math.min(rawCompletedLessons, totalLessons);
+                    const progressPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+                    return `
+                        <div class="glass-panel" style="padding: 25px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">${m.moduleTitle}</h3>
+                                <span style="color: var(--text-secondary); font-size: 14px;">${completedLessons}/${totalLessons} lessons completed (${progressPercent}%)</span>
+                            </div>
+                            <div style="background: #1f2937; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 20px;">
+                                <div style="background: #3b82f6; height: 100%; width: ${progressPercent}%"></div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                ${lessons.map((l, lessonIdx) => {
+                                    const isCompleted = completedLessons > lessonIdx;
+                                    return `
+                                        <div style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; ${isCompleted ? 'background: rgba(34, 197, 94, 0.1); border-color: #22c55e;' : ''}">
+                                            <div>
+                                                <div style="font-weight: 600; color: var(--text-primary);">${l.title}</div>
+                                                <div style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">${l.contentType} | ${l.durationMinutes} mins</div>
+                                            </div>
+                                            ${l.contentType === 'VIDEO' ? `
+                                                <a href="${l.contentUrl}" target="_blank" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 13px;">Watch</a>
+                                            ` : l.contentType === 'PDF' ? `
+                                                <a href="${l.contentUrl}" target="_blank" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 13px;">View</a>
+                                            ` : l.contentType === 'TEXT' ? `
+                                                <button class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 13px;" onclick="viewLessonText(${l.id}, '${l.title.replace(/'/g, "\\'")}')">Read</button>
+                                            ` : `
+                                                <button class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 13px;">Start</button>
+                                            `}
+                                            <button class="btn btn-sm ${isCompleted ? 'btn-success' : 'btn-outline-success'}" style="padding: 6px 12px; font-size: 13px;" onclick="markLessonComplete(${m.id}, ${lessonIdx})">
+                                                ${isCompleted ? '✓ Done' : 'Mark Complete'}
+                                            </button>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                })).then(html => html.join(''));
+            } catch (err) {
+                console.error('Error loading course modules:', err);
+                document.getElementById('course-modules-container').innerHTML = `<div class="glass-panel" style="padding: 30px; text-align: center; color: var(--text-secondary);">Error loading modules.<br><small style="opacity:0.7;">${(err.message || err).toString().replace(/</g,'&lt;')}</small></div>`;
+            }
+        }
+
+        async function markLessonComplete(moduleId, lessonOrderIndex) {
+            try {
+                const response = await fetch(`/module-progress/update?studentId=${studentId}&moduleId=${moduleId}&completedLessons=${lessonOrderIndex + 1}`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    const progress = await response.json();
+                    if (progress.completed) {
+                        showMessage("Module completed! 🎉");
+                    } else {
+                        showMessage("Lesson marked as complete!");
+                    }
+                    const courseId = document.getElementById('content-course').value;
+                    loadCourseModules(courseId);
+                    
+                    // Also update course progress
+                    const courseProgressResponse = await fetch(`/module-progress/course-progress?studentId=${studentId}&courseId=${courseId}`);
+                    const courseProgress = await courseProgressResponse.json();
+                    
+                    // Update course progress in database
+                    await fetch(`/course-progress/update`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ studentId, courseId, progressPercentage: courseProgress })
+                    });
+                } else {
+                    showMessage("Failed to mark lesson as complete.", true);
+                }
+            } catch (err) {
+                console.error('Error marking lesson complete:', err);
+                showMessage("Network error.", true);
+            }
+        }
+
+        function viewLessonText(lessonId, title) {
+            alert(`Lesson content for: ${title}\n\n(Text content viewer would open here)`);
+        }
+
+
+        async function loadProgressData() {
+            try {
+                // Load courses for dropdown - use student-specific endpoint
+                const enrollResponse = await fetch(`/enrollement/student?studentId=${studentId}`);
+                const enrollments = await enrollResponse.json();
+                const courseSelect = document.getElementById('progress-course');
+                const certCourseSelect = document.getElementById('cert-course');
+                const reviewCourseSelect = document.getElementById('review-course');
+                
+                if (enrollments.length === 0) {
+                    const noOption = '<option value="" disabled selected>No enrolled courses</option>';
+                    courseSelect.innerHTML = noOption;
+                    certCourseSelect.innerHTML = noOption;
+                    reviewCourseSelect.innerHTML = noOption;
+                    document.getElementById('progress-list').innerHTML = '<p style="color: var(--text-secondary);">No progress data available.</p>';
+                    return;
+                }
+                
+                const options = enrollments.map(e => `<option value="${e.course.id}">${e.course.title}</option>`).join('');
+                courseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>' + options;
+                certCourseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>' + options;
+                reviewCourseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>' + options;
+
+                // Load progress
+                const progressResponse = await fetch(`/course-progress/student?studentId=${studentId}`);
+                const progressList = await progressResponse.json();
+                const progressContainer = document.getElementById('progress-list');
+                
+                if (progressList.length === 0) {
+                    progressContainer.innerHTML = '<p style="color: var(--text-secondary);">No progress data available.</p>';
+                } else {
+                    progressContainer.innerHTML = progressList.map(p => `
+                        <div style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                            <div style="font-weight: 700; color: var(--text-primary);">${p.course.title}</div>
+                            <div style="margin-top: 8px;">
+                                <div style="background: #1f2937; height: 10px; border-radius: 5px; overflow: hidden;">
+                                    <div style="background: #3b82f6; height: 100%; width: ${p.progressPercentage}%"></div>
+                                </div>
+                                <span style="color: var(--text-secondary); font-size: 14px;">${p.progressPercentage}% ${p.completed ? '(Completed)' : ''}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Error loading progress data:', err);
+                document.getElementById('progress-list').innerHTML = '<p style="color: var(--text-secondary);">Error loading progress data.</p>';
+            }
+        }
+
+        // Progress is now derived automatically from module/lesson completion
+        // (see markLessonComplete()), so students can no longer self-report an
+        // arbitrary percentage. The manual update form/handler was removed.
+
+        async function loadCertificateData() {
+            try {
+                const response = await fetch(`/course-progress/student?studentId=${studentId}`);
+                const progressList = await response.json();
+                const completedCourses = progressList.filter(p => p.completed);
+                const certCourseSelect = document.getElementById('cert-course');
+                
+                certCourseSelect.innerHTML = '<option value="" disabled selected>Select Completed Course</option>' + 
+                    completedCourses.map(p => `<option value="${p.course.id}">${p.course.title}</option>`).join('');
+
+                // Load certificates
+                const certResponse = await fetch(`/certificate/student?studentId=${studentId}`);
+                const certificates = await certResponse.json();
+                const certContainer = document.getElementById('certificates-list');
+                
+                if (certificates.length === 0) {
+                    certContainer.innerHTML = '<p style="color: var(--text-secondary);">No certificates generated yet.</p>';
+                } else {
+                    certContainer.innerHTML = certificates.map(c => `
+                        <div style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                            <div style="font-weight: 700; color: var(--text-primary);">${c.course.title}</div>
+                            <div style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">
+                                Certificate #: ${c.certificateNumber} | Issued: ${c.issueDate}
+                            </div>
+                            <a href="/certificate/download/${c.certificateNumber}" target="_blank" style="display: inline-block; margin-top: 8px; color: #3b82f6;">Download Certificate</a>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Error loading certificate data:', err);
+            }
+        }
+
+        async function generateCertificate(event) {
+            event.preventDefault();
+            const courseId = parseInt(document.getElementById('cert-course').value);
+
+            try {
+                const response = await fetch('/certificate/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId, courseId })
+                });
+
+                if (response.ok) {
+                    showMessage("Certificate generated successfully!");
+                    document.getElementById('form-certificate').reset();
+                    loadCertificateData();
+                } else {
+                    const error = await response.text();
+                    showMessage(error || "Failed to generate certificate.", true);
+                }
+            } catch (err) {
+                showMessage("Network error generating certificate.", true);
+            }
+        }
+
+        async function loadReviewData() {
+            try {
+                const response = await fetch(`/review/student?studentId=${studentId}`);
+                const reviews = await response.json();
+                const reviewContainer = document.getElementById('reviews-list');
+                
+                if (reviews.length === 0) {
+                    reviewContainer.innerHTML = '<p style="color: var(--text-secondary);">No reviews submitted yet.</p>';
+                } else {
+                    reviewContainer.innerHTML = reviews.map(r => `
+                        <div style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                            <div style="font-weight: 700; color: var(--text-primary);">${r.course.title}</div>
+                            <div style="color: #fbbf24; margin-top: 4px;">${'⭐'.repeat(r.rating)}</div>
+                            <div style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">${r.comment}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Error loading review data:', err);
+            }
+        }
+
+        async function addReview(event) {
+            event.preventDefault();
+            const courseId = parseInt(document.getElementById('review-course').value);
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const comment = document.getElementById('review-comment').value;
+
+            try {
+                const response = await fetch('/review/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId, courseId, rating, comment })
+                });
+
+                if (response.ok) {
+                    showMessage("Review submitted successfully!");
+                    document.getElementById('form-review').reset();
+                    loadReviewData();
+                } else {
+                    showMessage("Failed to submit review.", true);
+                }
+            } catch (err) {
+                showMessage("Network error submitting review.", true);
+            }
+        }
+
+        // Load initial data
+        loadEnrolledCourses();
+    </script>
+</body>
+</html>

@@ -55,12 +55,11 @@
 
         <!-- Course Cards Grid -->
         <div class="course-grid" id="course-container">
-            <div th:each="course : ${courses}" class="course-card glass-panel" th:data-category="${course.category != null ? course.category.categoryName : 'General'}" th:onclick="'window.location.href=\'/course/' + ${course.id} + '\''">
+            <div th:each="course : ${courses}" class="course-card glass-panel" th:data-category="${course.category != null ? course.category.categoryName : 'General'}" th:onclick="'window.location.href=\'/courses/' + ${course.id} + '\''">
                 <div class="course-body">
                     <span class="course-category" th:text="${course.category != null ? course.category.categoryName : 'General'}">Category</span>
                     <h3 class="course-title" th:text="${course.title}">Course Title</h3>
-                    <p class="course-desc" th:text="${course.discription}">Course Description</p>
-                    <div class="course-footer">
+<p class="course-desc" th:text="${course.description}">Course Description</p>                    <div class="course-footer">
                         <span class="course-price" th:text="'₹' + ${#numbers.formatDecimal(course.price, 0, 0)}">₹999</span>
                         <span class="course-trainer"><i class="bi bi-person-circle text-primary"></i> <span th:text="${course.trainer != null ? course.trainer.name : 'Instructor'}">Instructor</span></span>
                     </div>

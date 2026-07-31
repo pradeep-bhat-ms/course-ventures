@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${mockTest.title} + ' - CourseHub'">Mock Test - CourseHub</title>
+    <title th:text="${mockTest.testname} + ' - CourseHub'">Mock Test - CourseHub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <header class="glass-header">
         <div class="container nav-wrapper">
             <a href="/" class="brand-logo"><i class="bi bi-rocket-takeoff-fill me-1"></i> CourseHub</a>
-            <span style="font-weight: 600; color: var(--text-secondary);" th:text="${mockTest.title}">Mock Exam</span>
+            <span style="font-weight: 600; color: var(--text-secondary);" th:text="${mockTest.testname}">Mock Exam</span>
         </div>
     </header>
 
@@ -23,7 +23,7 @@
             <!-- Header Bar with Timer -->
             <div class="quiz-header glass-panel">
                 <div>
-                    <h2 style="font-size: 20px; font-weight: 700; margin: 0;" th:text="${mockTest.title}">Exam</h2>
+                    <h2 style="font-size: 20px; font-weight: 700; margin: 0;" th:text="${mockTest.testname}">Exam</h2>
                     <span style="color: var(--text-secondary); font-size: 13px;" th:text="${questions.size()} + ' Questions Total'">Questions</span>
                 </div>
                 <div class="timer-box">
@@ -86,7 +86,7 @@
     </main>
 
     <script th:inline="javascript">
-        let durationMins = /*[[${mockTest.duration}]]*/ 30;
+        let durationMins = /*[[${mockTest.testDuration}]]*/ 30;
         let timeRemaining = durationMins * 60;
         let timerInterval;
 
@@ -131,20 +131,29 @@
             });
 
             try {
-                const response = await fetch(`/mock-test/submit?studentId=${studentId}&mockTestId=${mockTestId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(answers)
-                });
+            	const response = await fetch(`/mock-attempt/submit?studentId=${studentId}&mockTestId=${mockTestId}`, {
+            	    method: 'POST',
+            	    headers: { 'Content-Type': 'application/json' },
+            	    body: JSON.stringify(answers)
+            	});
 
                 if (response.ok) {
-                    const result = await response.json();
-                    document.getElementById('quiz-screen').style.display = 'none';
-                    document.getElementById('result-screen').style.display = 'block';
+                	const result = await response.json();
 
-                    document.getElementById('score-text').textContent = `${result.score}/${result.totalQuestions}`;
-                    const pct = Math.round((result.score / result.totalQuestions) * 100) || 0;
-                    document.getElementById('percentage-text').textContent = `${pct}% Correct (${result.score} out of ${result.totalQuestions})`;
+                	console.log(result);
+
+                	document.getElementById('quiz-screen').style.display = 'none';
+                	document.getElementById('result-screen').style.display = 'block';
+
+                	const score = result.data.score;
+                	const total = result.data.totalQuestions;
+
+                	document.getElementById('score-text').textContent = `${score}/${total}`;
+
+                	const pct = Math.round((score / total) * 100);
+
+                	document.getElementById('percentage-text').textContent =
+                	`${pct}% Correct (${score} out of ${total})`;
                 } else {
                     alert("Failed to evaluate test.");
                 }

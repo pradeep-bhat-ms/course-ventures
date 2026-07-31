@@ -13,7 +13,6 @@ public class EmailSender {
     public void sendMail(String toEmail, String otp) {
 
         try {
-
             SimpleMailMessage mailMessage = new SimpleMailMessage();
 
             mailMessage.setFrom("pradeephsgr@gmail.com");

@@ -91,6 +91,22 @@ public class MockTestController {
 		return new ResponseEntity<>(rs, HttpStatus.CREATED);
 	}
 
+	@PostMapping("/submit")
+	public ResponseEntity<java.util.Map<String, Object>> submitExam(
+			@RequestParam int studentId,
+			@RequestParam int mockTestId,
+			@RequestBody java.util.Map<String, String> answers) {
+
+		com.example.course_ventures.entity.MocktestAttempt attempt =
+				mockTestService.submitAttempt(studentId, mockTestId, answers);
+
+		java.util.Map<String, Object> data = new java.util.HashMap<>();
+		data.put("score", attempt.getScore());
+		data.put("totalQuestions", attempt.getTotalQuestions());
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<ResponseStructure<String>> deleteMockTest(
 			@PathVariable int id,

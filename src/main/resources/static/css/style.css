@@ -519,3 +519,283 @@ footer {
     border-top: 1px solid var(--border-color);
     background: rgba(7, 10, 18, 0.5);
 }
+/* ============================
+   Course Details Page
+============================ */
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 360px;
+    gap: 32px;
+    padding: 40px 0;
+    align-items: start;
+}
+
+.detail-main {
+    width: 100%;
+}
+
+.detail-sidebar {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+}
+
+.detail-card {
+    padding: 30px;
+}
+
+.detail-price-box {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.detail-price-label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.detail-price-value {
+    font-size: 40px;
+    font-weight: 800;
+    color: white;
+}
+
+.mock-test-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mock-test-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px;
+}
+
+.mock-test-info h4 {
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.mock-test-info span {
+    color: var(--text-secondary);
+}
+
+@media (max-width: 992px) {
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-sidebar {
+        position: static;
+    }
+
+}
+/* Mock test / quiz styles */
+.quiz-container {
+    max-width: 800px;
+    margin: 30px auto;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 10px;
+    z-index: 5;
+}
+
+.timer-box {
+    background: var(--accent-gradient);
+    color: #fff;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.question-card {
+    padding: 22px 25px;
+    margin-bottom: 18px;
+}
+
+.question-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 6px 0 16px;
+}
+
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-secondary);
+}
+
+.option-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-glow);
+}
+
+.option-item.selected {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: #6366f1;
+    color: var(--text-primary);
+}
+
+.option-marker {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.option-item.selected .option-marker {
+    background: var(--accent-gradient);
+    border-color: transparent;
+    color: #fff;
+}
+
+.quiz-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.result-card {
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 40px;
+    text-align: center;
+}
+
+.score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 6px solid #6366f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 25px auto;
+}
+
+.score-val {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.score-lbl {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+/* ============================
+   Student Dashboard Course Content
+============================ */
+
+.module-card{
+    margin-bottom:30px;
+    padding:28px;
+}
+
+.module-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.module-header h3{
+    margin:0;
+    font-size:30px;
+    font-weight:700;
+}
+
+.module-progress-text{
+    font-size:16px;
+    color:var(--text-secondary);
+    font-weight:600;
+}
+
+.progress-container{
+    width:100%;
+    height:10px;
+    background:rgba(255,255,255,.08);
+    border-radius:999px;
+    overflow:hidden;
+    margin:18px 0 24px;
+}
+
+.progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,#3b82f6,#6366f1);
+    border-radius:999px;
+    transition:.4s;
+}
+
+.lesson-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 20px;
+    margin-bottom:16px;
+    border:1px solid rgba(34,197,94,.55);
+    border-radius:14px;
+    background:rgba(16,185,129,.05);
+}
+
+.lesson-info h4{
+    margin:0;
+    font-size:18px;
+    font-weight:700;
+}
+
+.lesson-info p{
+    margin-top:6px;
+    color:var(--text-secondary);
+    font-size:14px;
+}
+
+.lesson-actions{
+    display:flex;
+    gap:12px;
+}
+
+.lesson-actions .btn{
+    min-width:90px;
+}

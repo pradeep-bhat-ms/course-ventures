@@ -53,21 +53,22 @@ public class ModuleProgressService {
 
 	public ModuleProgress updateProgress(int studentId, int moduleId, int completedLessons) {
 		ModuleProgress progress = getOrCreateProgress(studentId, moduleId);
-		progress.setCompletedLessons(completedLessons);
+		int clampedCompletedLessons = Math.min(completedLessons, progress.getTotalLessons());
+		progress.setCompletedLessons(clampedCompletedLessons);
 		
-		if (progress.getTotalLessons() > 0 && completedLessons >= progress.getTotalLessons()) {
+		if (progress.getTotalLessons() > 0 && clampedCompletedLessons >= progress.getTotalLessons()) {
 			progress.setCompleted(true);
 		}
 		
 		return moduleProgressRepository.save(progress);
 	}
 
-	public Optional<ModuleProgress> getStudentProgress(int studentId) {
-	    return moduleProgressRepository.findById(studentId);
+	public List<ModuleProgress> getStudentProgress(int studentId) {
+	    return moduleProgressRepository.findByStudentId(studentId);
 	}
 
-	public Optional<ModuleProgress> getModuleProgress(int moduleId) {
-	    return moduleProgressRepository.findById(moduleId);
+	public List<ModuleProgress> getModuleProgress(int moduleId) {
+	    return moduleProgressRepository.findByModuleId(moduleId);
 	}
 
 	public int calculateCourseProgress(int studentId, int courseId) {
@@ -80,4 +81,3 @@ public class ModuleProgressService {
 		return (completedModules * 100) / totalModules;
 	}
 }
-

@@ -63,13 +63,13 @@ public class CourseProgressService {
 	}
 
 	public List<CourseProgressResponseDto> getStudentProgress(int studentId) {
-		return courseProgressRepository.findById(studentId).stream()
+		return courseProgressRepository.findByStudentId(studentId).stream()
 				.map(this::convertToResponseDto)
 				.toList();
 	}
 
 	public List<CourseProgressResponseDto> getCourseProgress(int courseId) {
-		return courseProgressRepository.findById(courseId).stream()
+		return courseProgressRepository.findByCourseId(courseId).stream()
 				.map(this::convertToResponseDto)
 				.toList();
 	}

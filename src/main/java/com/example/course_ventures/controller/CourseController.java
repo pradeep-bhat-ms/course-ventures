@@ -53,11 +53,15 @@ public class CourseController {
 	            user.getId()
 	    );
 	}
+	
+	@GetMapping("/{id}")
+	public Course getCourse(@PathVariable int id) {
+	    return courseService.findCourseById(id);
+	}
 
 	@GetMapping("/fetch")
 	public List<Course> getAllCourses() {
-
-		return courseService.getAllCourses();
+	    return courseService.getAllCourses();
 	}
 
 	@GetMapping("/fetch/{id}")
@@ -97,21 +101,39 @@ public class CourseController {
 
 	@DeleteMapping("/delete/{id}")
 	public String deleteCourse(
-			@PathVariable int id,
-			Authentication authentication) {
+	        @PathVariable int id,
+	        Authentication authentication) {
 
-		User user = userRepository.findByemail(authentication.getName());
-		if (user == null || user.getRole() != Role.TRAINER) {
-			throw new IllegalStateException("Only trainers can delete courses.");
-		}
+	    User user = userRepository.findByemail(authentication.getName());
 
-		Course course = courseService.findCourseById(id);
-		if (course.getTrainer() == null || course.getTrainer().getId() != user.getId()) {
-			throw new IllegalStateException("You are not authorized to delete this course.");
-		}
+	    if (user == null) {
+	        throw new IllegalStateException("User not found.");
+	    }
 
-		courseService.deleteCourse(id);
-		return "Course Deleted Successfully";
+	    Course course = courseService.findCourseById(id);
+
+	    // Admin can delete any course
+	    if (user.getRole() == Role.ADMIN) {
+	        courseService.deleteCourse(id);
+	        return "Course Deleted Successfully";
+	    }
+
+	    // Trainer can delete only their own course
+	    if (user.getRole() == Role.TRAINER) {
+
+	        if (course.getTrainer() == null ||
+	                course.getTrainer().getId() != user.getId()) {
+
+	            throw new IllegalStateException(
+	                    "You are not authorized to delete this course.");
+	        }
+
+	        courseService.deleteCourse(id);
+	        return "Course Deleted Successfully";
+	    }
+
+	    throw new IllegalStateException(
+	            "Only Admin or Trainer can delete courses.");
 	}
 }
 

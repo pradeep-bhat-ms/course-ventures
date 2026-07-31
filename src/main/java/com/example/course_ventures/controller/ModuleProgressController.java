@@ -1,7 +1,5 @@
 package com.example.course_ventures.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +28,12 @@ public class ModuleProgressController {
 	}
 
 	@GetMapping("/student/{studentId}")
-	public Optional<ModuleProgress> getStudentProgress(@PathVariable int studentId) {
+	public java.util.List<ModuleProgress> getStudentProgress(@PathVariable int studentId) {
 		return moduleProgressService.getStudentProgress(studentId);
 	}
 
 	@GetMapping("/module/{moduleId}")
-	public Optional<ModuleProgress> getModuleProgress(@PathVariable int moduleId) {
+	public java.util.List<ModuleProgress> getModuleProgress(@PathVariable int moduleId) {
 		return moduleProgressService.getModuleProgress(moduleId);
 	}
 
