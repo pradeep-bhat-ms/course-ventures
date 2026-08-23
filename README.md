@@ -18,8 +18,6 @@ A Full Stack Learning Management System (LMS) built using **Spring Boot, Spring 
 |-------------------|-----------------|
 | ![Trainer](screenshots/trainer-dashboard.png) | ![Admin](screenshots/admin-dashboard.png) |
 
----
-
 # 🚀 Features
 
 ## 👨‍🎓 Student
