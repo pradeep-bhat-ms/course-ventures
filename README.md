@@ -8,7 +8,7 @@ A Full Stack Learning Management System (LMS) built using **Spring Boot, Spring 
 
 # 📸 Screenshots
 
-> Add screenshots here after deployment.
+
 
 | Home | Student Dashboard |
 |------|-------------------|
@@ -17,6 +17,8 @@ A Full Stack Learning Management System (LMS) built using **Spring Boot, Spring 
 | Trainer Dashboard | Admin Dashboard |
 |-------------------|-----------------|
 | ![Trainer](screenshots/trainer-dashboard.png) | ![Admin](screenshots/admin-dashboard.png) |
+
+------
 
 # 🚀 Features
 
